@@ -1,11 +1,9 @@
-Brian Wang
-Jian Hong Li
 Donald Bi
-Brain Yang
+Yat Long Chang
+David Deng
+Jacob Guo
 pd 8
 ---------------------
-AO4 - Grassameter Insult
-
  ______   ______   __   __   __       ______   _______
 /_____/\ /_____/\ /_/\ /_/\ /_/\     /_____/\ /______/\
 \:::_ \ \\::::_\/_\:\ \\ \ \\:\ \    \:::_ \ \\::::__\/__
