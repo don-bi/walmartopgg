@@ -1,0 +1,29 @@
+Brian Wang
+Jian Hong Li
+Donald Bi
+Brain Yang
+pd 8
+---------------------
+AO4 - Grassameter Insult
+
+ ______   ______   __   __   __       ______   _______
+/_____/\ /_____/\ /_/\ /_/\ /_/\     /_____/\ /______/\
+\:::_ \ \\::::_\/_\:\ \\ \ \\:\ \    \:::_ \ \\::::__\/__
+ \:\ \ \ \\:\/___/\\:\ \\ \ \\:\ \    \:\ \ \ \\:\ /____/\
+  \:\ \ \ \\::___\/_\:\_/.:\ \\:\ \____\:\ \ \ \\:\\_  _\/
+   \:\/.:| |\:\____/\\ ..::/ / \:\/___/\\:\_\ \ \\:\_\ \ \
+    \____/_/ \_____\/ \___/_(   \_____\/ \_____\/ \_____\/
+==============================================================
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+==============================================================
+
+Group -- 2023-05-04 12:58
+--------------------------------------------------------------
+Change the design doc by adding all the columns of the table in our db
+Also made it more specific by explaining how we are defining the terms we have
+Added Riot API
+Added javascript to our component map
+
+feedback was that they didn't really understand our league terms and also to be mores specific in our explanations
+==============================================================
