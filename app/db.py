@@ -3,7 +3,6 @@ import random
 
 DB_FILE = "database.db"
 
-db = None
 db = sqlite3.connect(DB_FILE)
 c = db.cursor()
 
@@ -12,15 +11,114 @@ with open('match_data.json') as f:
     file_stuff = f.read()
 parsed_data = json.loads(file_stuff)
 
+
 for match in parsed_data:
-    
+    c.execute("CREATE TABLE IF NOT EXISTS matches(MATCH_ID TEXT, \
+    GAME_DURATION INTEGER, WIN INTEGER, BLUE_CHAMP_KILLS INTEGER, BLUE_BARON_KILLS INTEGER \
+    BLUE_DRAGON_KILLS INTEGER, BLUE_INHIB_KILLS INTEGER, BLUE_TOWER_KILLS INTEGER, \
+    BLUE_HERALD_KILLS INTEGER, BLUE_TOWER_KILLS INTEGER, RED_CHAMP_KILLS, RED_BARON_KILLS INTEGER \
+    RED_DRAGON_KILLS INTEGER, RED_INHIB_KILLS INTEGER, RED_TOWER_KILLS INTEGER, \
+    RED_HERALD_KILLS INTEGER, RED_TOWER_KILLS INTEGER;")
 
-# dataset
-c.execute("CREATE TABLE if not Exists users(ID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, Did_Questions BOOLEAN);")
+        
+    c.execute("CREATE TABLE IF NOT EXISTS participants(MATCH_ID TEXT, PUUID TEXT, \
+    ASSISTS INTEGER, BARON_KILLS INTEGER, BOUNTY_LEVEL INTEGER, CHAMP_EXPERIENCE INTEGER, CHAMP_LEVEL INTEGER \
+,    CHAMPION_ID INTEGER, CHAMPION_NAME TEXT, consumablesPurchased INTEGER, DAMAGE_DEALT_TO_BUILDINGS INTEGER, DAMAGE_DEALT_TO_OBJECTIVES INTEGER 	
+,damageDealtToTurrets INTEGER 	
+,damageSelfMitigated INTEGER 	
+,deaths INTEGER 
+,detectorWardsPlaced INTEGER 	
+,doubleKills INTEGER 	
+,dragonKills INTEGER 	
+,firstBloodAssist INTEGER 	
+,firstBloodKill INTEGER 	
+,firstTowerAssist INTEGER 	
+,firstTowerKill INTEGER 	
+,gameEndedInEarlySurrender INTEGER 	
+,gameEndedInSurrender INTEGER 	
+,goldEarned INTEGER 	
+,goldSpent INTEGER 	
+,individualPosition STRING 	
+,inhibitorKills INTEGER 	
+,inhibitorTakedowns INTEGER 	
+,inhibitorsLost INTEGER 	
+,item0 INTEGER 	
+,item1 INTEGER 	
+,item2 INTEGER 	
+,item3 INTEGER 	
+,item4 INTEGER 	
+,item5 INTEGER 	
+,item6 INTEGER 	
+,itemsPurchased INTEGER 	
+,killingSprees INTEGER 	
+,kills INTEGER 	
+,lane STRING 	
+,largestCriticalStrike INTEGER 	
+,largestKillingSpree INTEGER 	
+,largestMultiKill INTEGER 	
+,longestTimeSpentLiving INTEGER 	
+,magicDamageDealt INTEGER 	
+,magicDamageDealtToChampions INTEGER 	
+,magicDamageTaken INTEGER 	
+,neutralMinionsKilled INTEGER 	
+,nexusKills INTEGER 	
+,nexusTakedowns INTEGER 	
+,nexusLost INTEGER 	
+,objectivesStolen INTEGER 	
+,objectivesStolenAssists INTEGER 	
+,participantId INTEGER 	
+,PENTA INTEGER 	
+,PERKS PerksDto 	
+,PHYS_DMG_DEALT INTEGER 	
+,PHYS_DMG_TAKEN INTEGER 	
+,PROFILE_ICON INTEGER 	
+,PUUID STRING 	
+,QUAD_KILLS INTEGER 	
+,RIOT_ID_NAME STRING 	
+,RIOT_ID_TAGlINE STRING 	
+,ROLE STRING 	
+,SIGHT_WARDS_BOUGHT INTEGER 	
+,SPELL1_CASTS INTEGER 	
+,SPELL2_CASTS INTEGER 	
+,SPELL3_CASTS INTEGER 	
+,SPELL4_CASTS INTEGER 	
+,SUMMONER1_CASTS INTEGER 	
+,sUMMONER1_ID INTEGER 	
+,SUMMONER2_CASTS INTEGER 	
+,SUMMONER2_ID INTEGER 	
+,SUMMONER_ID STRING 	
+,SUMMONDER_LEVEL INTEGER 	
+,SUMMONER_NAME STRING 	
+,TEAM_EARLY_SURRENDER INTEGER 	
+,TEAM_ID INTEGER 	
+,TEAM_POSITION STRING
+,TIME_CCING_OTHERS INTEGER 	
+,TIME_PLAYED INTEGER 	
+,TOTAL_DAMAGE_DEALT INTEGER 	
+,TOTAL_DAMAGE_DEALT_TO_CHAMPIONS INTEGER 	
+,TOTAL_DAMAGE_SHIELDED_ON_TEAMMATES INTEGER 	
+,TOTAL_DAMAGE_TAKEN INTEGER 	
+,TOTAL_HEAL INTEGER 	
+,TOTAL_HEALS_ON_TEAMMATES INTEGER 	
+,TOTAL_MINIONS_KILLED INTEGER 	
+,TOTAL_TIME_CC_DEALT INTEGER 	
+,TOTAL_TIME_SPENT_DEAD INTEGER 	
+,TOTAL_UNITS_HEALED INTEGER 	
+,TRIPLE_KILLS INTEGER 	
+,TRUE_DAMAGE_DEALT INTEGER 	
+,TRUE_DAMAGE_DEALT_TO_CHAMPIONS INTEGER 	
+,TRUE_DAMAGE_TAKEN INTEGER 	
+,TURRET_KILLS INTEGER 	
+,TURRET_TAKEDOWNS INTEGER 	
+,TURRETS_LOST INTEGER 	
+,UNREAL_KILLS INTEGER 	
+,VISION_SCORE INTEGER 	
+,VISION_WARDS_BOUGHT_IN_GAME INTEGER 	
+,WARDS_KILLED INTEGER 	
+,WARDS_PLACED INTEGER 	
+,WIN INTEGER 
+  )")
 
-c.execute("CREATE TABLE if not Exists game(ID INTEGER, Game TEXT, Game_Username TEXT);")
-its = ["You probably live in your parents' basement@@", "Looks like all the grass you have touched were digital!@@", "This could go either way, what are you really?@@", "Are you too poor to afford a computer? Or are you lying on the quizes?@@", "You green as nature!@@"]
-c.execute('INSERT or IGNORE INTO insult(lv5, lv4, lv3, lv2, lv1) VALUES (?, ?, ?, ?, ?);', (its[0], its[1], its[2], its[3],its[4]))
 db.commit()
 c.close()
 
