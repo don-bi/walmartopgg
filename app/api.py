@@ -59,16 +59,23 @@ def find_match_ids():
 
 #find_match_ids()
 
-def make_match_data():
+def make_match_data(start_index):
     f = open("match_ids.txt", "r")
     match_ids = f.readlines()
     f.close()
-    count = 0
-    for id in match_ids:
+    count = start_index
+    for id in match_ids[start_index:]:
         id = id.strip()
         url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{id}"
         data = json.loads(requests.get(url, headers = {"X-Riot-Token" : token}).text) #data of match
         
+        print(f'{count} is the current index of match_ids')
+        count += 1
+
+        if (data['info']['gameMode'] != 'CLASSIC'):
+            print(f'{count-1} is not a classic game')
+            continue
+
         # writes data to json file
         f = open("match_data.json", "a")
         if (count == 0):
@@ -77,16 +84,6 @@ def make_match_data():
             f.write('}\n')
         f.write(f',"{data["metadata"]["matchId"]}": {json.dumps(data, indent=2)}\n') 
         f.close()
-
-        count += 1
-        print(f'{count} is the current index of match_ids')
         time.sleep(1.3)
 
-make_match_data()
-
-# example of how to read json file
-# with open('match_data.json') as f:
-#     file_stuff = f.read()
-
-# parsed_data = json.loads(file_stuff)
-# print(parsed_data['NA1_4647099839'])
+make_match_data(0)
