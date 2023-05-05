@@ -25,3 +25,8 @@ Added javascript to our component map
 
 feedback was that they didn't really understand our league terms and also to be mores specific in our explanations
 ==============================================================
+
+Yat Long -- 2023-05-04 13:41
+--------------------------------------------------------------
+create flask app with js linked html page
+==============================================================
