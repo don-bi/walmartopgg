@@ -1,3 +1,19 @@
 body {
     height: 100vh;
+    background-color: gray;
+}
+
+.random-match {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background-color: hsl(192, 65%, 65%);
+    color: white;
+    border: none;
+    transition: 0.1s;
+}
+
+.random-match:hover {
+    background-color: hsl(192, 65%, 45%);
+    color: rgb(185, 185, 185);
 }
