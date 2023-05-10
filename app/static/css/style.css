@@ -17,3 +17,18 @@ body {
     background-color: hsl(192, 65%, 45%);
     color: rgb(185, 185, 185);
 }
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 60%;
+    height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
