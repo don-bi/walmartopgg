@@ -14,9 +14,12 @@
     <input type="text" class="form-control" placeholder="Search">
   </div>
   <div>or</div>
-  <button class="random-match">click here to find a random match!</button>
+  <form action="/random" method="post">
+    <button type="submit" class="random-match">click here to find a random match!</button>
+  </form>
 
 
   <script src={{url_for('static', filename='js/script.js')}}></script>
+  <script src={{url_for('static', filename='js/wallpaper.js')}}></script>
 </body>
 </html>
