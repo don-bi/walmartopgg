@@ -1,16 +1,21 @@
 import sqlite3
-import random
+import random, os, json, time
+
+global DB_FILE
+DB_FILE = "database.db"
+
+# parse data from json
+current_dir = os.path.dirname(__file__)
+file_path = os.path.join(current_dir, 'match_data.json')
+
+with open(file_path) as f:
+    file_stuff = f.read()
+global parsed_data 
+parsed_data = json.loads(file_stuff)
 
 def make_database():
-    DB_FILE = "database.db"
-
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-
-    # parse data from json
-    with open('match_data.json') as f:
-        file_stuff = f.read()
-    parsed_data = json.loads(file_stuff)
 
 
     for match in parsed_data:
@@ -21,31 +26,154 @@ def make_database():
         RED_DRAGON_KILLS INTEGER, RED_INHIB_KILLS INTEGER, RED_TOWER_KILLS INTEGER, \
         RED_HERALD_KILLS INTEGER, RED_TOWER_KILLS INTEGER);")
 
-            
-        c.execute("CREATE TABLE IF NOT EXISTS participants(MATCH_ID TEXT, \
-        ASSISTS INTEGER, BARON_KILLS INTEGER, BOUNTY_LEVEL INTEGER, CHAMP_EXPERIENCE INTEGER, CHAMP_LEVEL INTEGER, \
-        CHAMPION_ID INTEGER, CHAMPION_NAME TEXT, CONSUMABLES_PURCHASED INTEGER, DAMAGE_DEALT_TO_BUILDINGS INTEGER, \
-        DAMAGE_DEALT_TO_OBJECTIVES INTEGER, DAMAGE_DEALT_TO_TURRETS INTEGER, DAMAGE_SELF_MITIGATED INTEGER, DEATHS INTEGER, \
-        DEATHS INTEGER, DETECTOR_WARDS_PLACED INTEGER, DOUBLE_KILLS INTEGER, DRAGONS INTEGER, FIRST_BLOOD_ASSIST INTEGER, \
-        FIRST_BLOOD_KILL INTEGER, FIRST_TOWER_ASSIST INTEGER, FIRST_TOWER_KILL INTEGER, GAME_ENDED_IN_EARLY_SURRENDER INTEGER, \
-        GAME_ENDED_IN_SURRENDER INTEGER, GOLD_EARNED INTEGER, GOLD_SPENT INTEGER, INDIVIDUAL_POSITION STRING, INHIB_KILLS INTEGER, \
-        INHIB_TAKEDOWNS INTEGER, INHIBS_LOST INTEGER, ITEM0 INTEGER, ITEM1 INTEGER, ITEM2 INTEGER, ITEM3 INTEGER, ITEM4 INTEGER, \
-        ITEM5 INTEGER, ITEM6 INTEGER, ITEMS_PURCHASED INTEGER, KILLING_SPREES INTEGER, KILLS INTEGER, LANE STRING, LARGEST_CRIT INTEGER, \
-        LARGEST_KILLING_SPREE INTEGER, LARGEST_MULTIKILL INTEGER, LONGEST_TIME_ALIVE INTEGER, MAGIC_DAMAGE_DEALT INTEGER, \
-        MAGIC_DAMAGE_DEALT_TO_CHAMPS INTEGER, MAGIC_DAMAGE_TAKEN INTEGER, NEUTRAL_MINIONS_KILLED INTEGER, NEXUS_KILLS INTEGER, \
-        NEXUS_TAKEDOWNS INTEGER, NEXUS_LOST INTEGER, OBJECTIVES_STOLEN INTEGER, OBJECTIVES_STOLEN_ASSISTS INTEGER, PARTICIPANT_ID INTEGER, \
-        PENTA INTEGER, PERKS BLOB, PHYS_DMG_DEALT INTEGER, PHYS_DMG_TAKEN INTEGER, PROFILE_ICON INTEGER, PUUID STRING, QUAD_KILLS INTEGER, \
-        RIOT_ID_NAME STRING, RIOT_ID_TAGlINE STRING, ROLE STRING, SIGHT_WARDS_BOUGHT INTEGER, SPELL1_CASTS INTEGER, \
-        SPELL2_CASTS INTEGER, SPELL3_CASTS INTEGER, SPELL4_CASTS INTEGER, SUMMONER1_CASTS INTEGER, SUMMONER1_ID INTEGER, \
-        SUMMONER2_CASTS INTEGER, SUMMONER2_ID INTEGER, SUMMONER_ID STRING, SUMMONDER_LEVEL INTEGER, SUMMONER_NAME STRING, \
-        TEAM_EARLY_SURRENDER INTEGER, TEAM_ID INTEGER, TEAM_POSITION STRI, TIME_CCING_OTHERS INTEGER, TIME_PLAYED INTEGER, \
-        TOTAL_DAMAGE_DEALT INTEGER, TOTAL_DAMAGE_DEALT_TO_CHAMPIONS INTEGER, TOTAL_DAMAGE_SHIELDED_ON_TEAMMATES INTEGER, TOTAL_DAMAGE_TAKEN INTEGER, \
-        TOTAL_HEAL INTEGER, TOTAL_HEALS_ON_TEAMMATES INTEGER, TOTAL_MINIONS_KILLED INTEGER, TOTAL_TIME_CC_DEALT INTEGER, \
-        TOTAL_TIME_SPENT_DEAD INTEGER, TOTAL_UNITS_HEALED INTEGER, TRIPLE_KILLS INTEGER, TRUE_DAMAGE_DEALT INTEGER, \
-        TRUE_DAMAGE_DEALT_TO_CHAMPIONS INTEGER, TRUE_DAMAGE_TAKEN INTEGER, TURRET_KILLS INTEGER, TURRET_TAKEDOWNS INTEGER, TURRETS_LOST INTEGER, \
-        UNREAL_KILLS INTEGER, VISION_SCORE INTEGER, VISION_WARDS_BOUGHT_IN_GAME INTEGER, WARDS_KILLED INTEGER, \
-        WARDS_PLACED INTEGER, WIN INTEGER);")
+        c.execute("CREATE TABLE IF NOT EXISTS participants(matchId TEXT, \
+        assists INTEGER, baronKills INTEGER, bountyLevel INTEGER, champExperience INTEGER, champLevel INTEGER, \
+        championId INTEGER, championName TEXT, consumablesPurchased INTEGER, damageDealtToBuildings INTEGER, \
+        damageDealtToObjectives INTEGER, damageDealtToTurrets INTEGER, damageSelfMitigated INTEGER, deaths INTEGER, \
+        detectorWardsPlaced INTEGER, doubleKills INTEGER, dragons INTEGER, firstBloodAssist INTEGER, \
+        firstBloodKill INTEGER, firstTowerAssist INTEGER, firstTowerKill INTEGER, gameEndedInEarlySurrender INTEGER, \
+        gameEndedInSurrender INTEGER, goldEarned INTEGER, goldSpent INTEGER, individualPosition STRING, inhibKills INTEGER, \
+        inhibTakedowns INTEGER, inhibsLost INTEGER, item0 INTEGER, item1 INTEGER, item2 INTEGER, item3 INTEGER, item4 INTEGER, \
+        item5 INTEGER, item6 INTEGER, itemsPurchased INTEGER, killingSprees INTEGER, kills INTEGER, lane STRING, largestCrit INTEGER, \
+        largestKillingSpree INTEGER, largestMultikill INTEGER, longestTimeAlive INTEGER, magicDamageDealt INTEGER, \
+        magicDamageDealtToChampions INTEGER, magicDamageTaken INTEGER, neutralMinionsKilled INTEGER, nexusKills INTEGER, \
+        nexusTakedowns INTEGER, nexusLost INTEGER, objectivesStolen INTEGER, objectivesStolenAssists INTEGER, participantId INTEGER, \
+        penta INTEGER, perks BLOB, physDmgDealt INTEGER, physDmgTaken INTEGER, profileIcon INTEGER, puuid STRING, quadKills INTEGER, \
+        riotIdName STRING, riotIdTagline STRING, role STRING, sightWardsBought INTEGER, spell1Casts INTEGER, \
+        spell2Casts INTEGER, spell3Casts INTEGER, spell4Casts INTEGER, summoner1Casts INTEGER, summoner1Id INTEGER, \
+        summoner2Casts INTEGER, summoner2Id INTEGER, summonerId STRING, summonderLevel INTEGER, summonerName STRING, \
+        teamEarlySurrender INTEGER, teamId INTEGER, teamPosition STRING, timeCcingOthers INTEGER, timePlayed INTEGER, \
+        totalDamageDealt INTEGER, totalDamageDealtToChampions INTEGER, totalDamageShieldedOnTeammates INTEGER, totalDamageTaken INTEGER, \
+        totalHeal INTEGER, totalHealsOnTeammates INTEGER, totalMinionsKilled INTEGER, totalTimeCcDealt INTEGER, \
+        totalTimeSpentDead INTEGER, totalUnitsHealed INTEGER, tripleKills INTEGER, trueDamageDealt INTEGER, \
+        trueDamageDealtToChampions INTEGER, trueDamageTaken INTEGER, turretKills INTEGER, turretTakedowns INTEGER, turretsLost INTEGER, \
+        unrealKills INTEGER, visionScore INTEGER, visionWardsBoughtInGame INTEGER, wardsKilled INTEGER, \
+        wardsPlaced INTEGER, win INTEGER);")
 
+        c.execute('''CREATE TABLE table_name (
+                all_in_pings INTEGER,
+                assist_me_pings INTEGER,
+                assists INTEGER,
+                bait_pings INTEGER,
+                baron_kills INTEGER,
+                basic_pings INTEGER,
+                bounty_level INTEGER,
+                challenges BLOB,
+                champ_experience INTEGER,
+                champ_level INTEGER,
+                champion_id INTEGER,
+                champion_name TEXT,
+                champion_transform TEXT,
+                command_pings INTEGER,
+                consumables_purchased INTEGER,
+                damage_dealt_to_buildings INTEGER,
+                damage_dealt_to_objectives INTEGER,
+                damage_dealt_to_turrets INTEGER,
+                damage_self_mitigated INTEGER,
+                danger_pings INTEGER,
+                deaths INTEGER,
+                detector_wards_placed INTEGER,
+                double_kills INTEGER,
+                dragon_kills INTEGER,
+                eligible_for_progression INTEGER,
+                enemy_missing_pings INTEGER,
+                enemy_vision_pings INTEGER,
+                first_blood_assist INTEGER,
+                first_blood_kill INTEGER,
+                first_tower_assist INTEGER,
+                first_tower_kill INTEGER,
+                game_ended_in_early_surrender INTEGER,
+                game_ended_in_surrender INTEGER,
+                get_back_pings INTEGER,
+                gold_earned INTEGER,
+                gold_spent INTEGER,
+                hold_pings INTEGER,
+                individual_position TEXT,
+                inhibitor_kills INTEGER,
+                inhibitor_takedowns INTEGER,
+                inhibitors_lost INTEGER,
+                item0 INTEGER,
+                item1 INTEGER,
+                item2 INTEGER,
+                item3 INTEGER,
+                item4 INTEGER,
+                item5 INTEGER,
+                item6 INTEGER,
+                items_purchased INTEGER,
+                killing_sprees INTEGER,
+                kills INTEGER,
+                lane TEXT,
+                largest_critical_strike INTEGER,
+                largest_killing_spree INTEGER,
+                largest_multi_kill INTEGER,
+                longest_time_spent_living INTEGER,
+                magic_damage_dealt INTEGER,
+                magic_damage_dealt_to_champions INTEGER,
+                magic_damage_taken INTEGER,
+                need_vision_pings INTEGER,
+                neutral_minions_killed INTEGER,
+                nexus_kills INTEGER,
+                nexus_lost INTEGER,
+                nexus_takedowns INTEGER,
+                objectives_stolen INTEGER,
+                objectives_stolen_assists INTEGER,
+                on_my_way_pings INTEGER,
+                participant_id INTEGER,
+                penta_kills INTEGER,
+                perks TEXT,
+                physical_damage_dealt INTEGER,
+                physical_damage_dealt_to_champions INTEGER,
+                physical_damage_taken INTEGER,
+                profile_icon INTEGER,
+                push_pings INTEGER,
+                puuid TEXT,
+                quadra_kills INTEGER,
+                riot_id_name TEXT,
+                riot_id_tagline TEXT,
+                role TEXT,
+                sight_wards_bought_in_game INTEGER,
+                spell1_casts INTEGER,
+                spell2_casts INTEGER,
+                spell3_casts INTEGER,
+                spell4_casts INTEGER,
+                summoner1_casts INTEGER,
+                summoner1_id INTEGER,
+                summoner2_casts INTEGER,
+                summoner2_id INTEGER,
+                summoner_id TEXT,
+                summoner_level INTEGER,
+                summoner_name TEXT,
+                team_early_surrendered INTEGER,
+                team_id INTEGER,
+                team_position TEXT,
+                time_ccing_others INTEGER,
+                time_played INTEGER,
+                total_ally_jungle_minions_killed INTEGER,
+                total_damage_dealt INTEGER,
+                total_damage_dealt_to_champions INTEGER,
+                total_damage_shielded_on_teammates INTEGER,
+                total_damage_taken INTEGER,
+                total_enemy_jungle_minions_killed INTEGER,
+                total_heal INTEGER,
+                total_heals_on_teammates INTEGER,
+                total_minions_killed INTEGER,
+                total_time_cc_dealt INTEGER,
+                total_time_spent_dead INTEGER,
+                total_units_healed INTEGER,
+                triple_kills INTEGER,
+                true_damage_dealt INTEGER,
+                true_damage_dealt_to_champions INTEGER,
+                true_damage_taken INTEGER,
+                turret_kills INTEGER,
+                turret_takedowns INTEGER,
+                turrets_lost INTEGER,
+                unreal_kills INTEGER,
+                vision_cleared_pings INTEGER,
+                vision_score INTEGER,
+                vision_wards_bought_in_game INTEGER,
+                wards_killed INTEGER,
+                wards_placed INTEGER,
+                win TEXT)''')
     db.commit()
     c.close()
 
@@ -57,6 +185,15 @@ def db_connect():
 def db_close():
     db.commit()
     db.close()
+
+def get_participant_data_names():
+    lst = []
+    for data in parsed_data['NA1_4642365867']['info']['participants'][0]:
+        lst.append(data)
+    print(lst)
+    
+
+get_participant_data_names()
 
 # def create_user(username, password):
 #     c = db_connect()
