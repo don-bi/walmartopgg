@@ -30,10 +30,10 @@ def make_database():
     for match in parsed_data:
         c.execute("CREATE TABLE IF NOT EXISTS matches(MATCH_ID TEXT, \
         GAME_DURATION INTEGER, WIN INTEGER, BLUE_CHAMP_KILLS INTEGER, BLUE_BARON_KILLS INTEGER, \
-        BLUE_DRAGON_KILLS INTEGER, BLUE_INHIB_KILLS INTEGER, BLUE_TOWER_KILLS INTEGER, \
-        BLUE_HERALD_KILLS INTEGER, RED_CHAMP_KILLS, RED_BARON_KILLS INTEGER, \
-        RED_DRAGON_KILLS INTEGER, RED_INHIB_KILLS INTEGER, RED_TOWER_KILLS INTEGER, \
-        RED_HERALD_KILLS INTEGER);")
+        BLUE_DRAGON_KILLS INTEGER, BLUE_INHIB_KILLS INTEGER, \
+        BLUE_HERALD_KILLS INTEGER, BLUE_TOWER_KILLS INTEGER, RED_CHAMP_KILLS, RED_BARON_KILLS INTEGER, \
+        RED_DRAGON_KILLS INTEGER, RED_INHIB_KILLS INTEGER, \
+        RED_HERALD_KILLS INTEGER, RED_TOWER_KILLS INTEGER);")
 
         c.execute('''CREATE TABLE IF NOT EXISTS participants (matchId TEXT,
                    allInPings INT,assistMePings INT,assists INT,baitPings INT,baronKills INT,basicPings INT,bountyLevel INT,challenges TEXT,
@@ -74,6 +74,14 @@ def insert_participant_data():
         query = "INSERT INTO participants VALUES (" + '?,' * 123 + '?)'
         c.execute(query,[str(matchId)] + value_list)
     db_close()
+
+def insert_match_data():
+    c = db_connect()
+    for matchId in parsed_data:
+        match_data = parsed_data[matchId]['info']
+        query = "INSERT INTO matches VALUES (" + '?,' * 15 + '?)'
+        c.execute(query, [str(matchId), match_data['gameDuration'], match_data['teams'][0]['win'], match_data['teams'][0]['objectives']['champion']['kills'], match_data['teams'][0]['objectives']['baron']['kills'], match_data['teams'][0]['objectives']['dragon']['kills'], match_data['teams'][0]['objectives']['inhibitor']['kills'], match_data['teams'][0]['objectives']['riftHerald']['kills'], match_data['teams'][0]['objectives']['tower']['kills'], match_data['teams'][1]['objectives']['champion']['kills'], match_data['teams'][1]['objectives']['baron']['kills'], match_data['teams'][1]['objectives']['dragon']['kills'], match_data['teams'][1]['objectives']['inhibitor']['kills'], match_data['teams'][1]['objectives']['riftHerald']['kills'], match_data['teams'][1]['objectives']['tower']['kills']])
+    db_close()
     
 
 def make_champion_data():
@@ -90,7 +98,7 @@ print(print_sqlite_table('participants'))
 
 def get_participant_data_names():
     lst = []
-    for data in parsed_data['NA1_4642365867']['info']['participants'][0]:
+    for data in parsed_data['NA1_4642365867']['metadata']['participants'][0]:
         lst.append(data)
     return(lst)
 
