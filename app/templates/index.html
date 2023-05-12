@@ -9,12 +9,11 @@
   <link rel="stylesheet" href={{url_for('static', filename='css/style.css')}}>
 </head>
 <body class="align-items-center">
-  <div class="form-group has-search">
+  <div class="form-group has-search" style="width: 80%; margin: auto; padding-top: 10%;">
     <span class="fa fa-search form-control-feedback"></span>
     <input type="text" class="form-control" placeholder="Search">
   </div>
-  <div>or</div>
-  <form action="/random" method="post">
+  <form action="/random" method="post" style="width: 20%; margin: auto;">
     <button type="submit" class="random-match">click here to find a random match!</button>
   </form>
 
