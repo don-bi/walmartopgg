@@ -62,7 +62,9 @@ def insert_participant_data():
     for matchId in parsed_data:
         value_list = []
         for key in data_keys:
+            # print(data_keys)
             data_value = parsed_data[matchId]['info']['participants'][0].get(key)
+            # print(data_value)
             if (data_value == None):
                 value_list.append(0)
             elif (isinstance(data_value, dict)):
@@ -71,6 +73,7 @@ def insert_participant_data():
                 value_list.append(data_value)
             # print(matchId, value_list)
         # time.sleep(5),{}
+        print(value_list)
         query = "INSERT INTO participants VALUES (" + '?,' * 123 + '?)'
         c.execute(query,[str(matchId)] + value_list)
     db_close()
@@ -79,7 +82,7 @@ def insert_match_data():
     c = db_connect()
     for matchId in parsed_data:
         match_data = parsed_data[matchId]['info']
-        query = "INSERT INTO matches VALUES (" + '?,' * 15 + '?)'
+        query = "INSERT INTO matches VALUES (" + '?,' * 14 + '?)'
         c.execute(query, [str(matchId), match_data['gameDuration'], match_data['teams'][0]['win'], match_data['teams'][0]['objectives']['champion']['kills'], match_data['teams'][0]['objectives']['baron']['kills'], match_data['teams'][0]['objectives']['dragon']['kills'], match_data['teams'][0]['objectives']['inhibitor']['kills'], match_data['teams'][0]['objectives']['riftHerald']['kills'], match_data['teams'][0]['objectives']['tower']['kills'], match_data['teams'][1]['objectives']['champion']['kills'], match_data['teams'][1]['objectives']['baron']['kills'], match_data['teams'][1]['objectives']['dragon']['kills'], match_data['teams'][1]['objectives']['inhibitor']['kills'], match_data['teams'][1]['objectives']['riftHerald']['kills'], match_data['teams'][1]['objectives']['tower']['kills']])
     db_close()
     
@@ -87,6 +90,7 @@ def insert_match_data():
 def make_champion_data():
     c.execute('''CREATE TABLE champion_stats (championName TEXT, )''')
 
+# print sqlite table
 def print_sqlite_table(table_name):
     c = db_connect()
     c.execute('SELECT * FROM ' + table_name)
@@ -94,13 +98,16 @@ def print_sqlite_table(table_name):
     db_close()
     return data
 
-print(print_sqlite_table('participants'))
+# print(print_sqlite_table('participants'))
 
+# get participant data names
 def get_participant_data_names():
     lst = []
-    for data in parsed_data['NA1_4642365867']['metadata']['participants'][0]:
+    for data in parsed_data['NA1_4642365867']['info']['participants'][0]:
         lst.append(data)
     return(lst)
+
+print(get_participant_data_names())
 
 # get random matchId from database
 def get_random_id():
@@ -110,8 +117,9 @@ def get_random_id():
     db_close()
     return data
 
-# make_database()
-# insert_participant_data()
+make_database()
+insert_participant_data()
+insert_match_data()
 
 # get participant info for specific match
 def get_participant_data(matchId):
