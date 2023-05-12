@@ -17,7 +17,7 @@ def random():
 def match(match_id):
     match_data = db.get_match_data(match_id)
     participant_data = db.get_participant_data(match_id)
-    return render_template('match.html', match_id=match_id match_data=match_data, participant_data=participant_data)
+    return render_template('match.html', match_id=match_id, match_data=match_data, participant_data=participant_data)
 
 
 if __name__ == '__main__':
