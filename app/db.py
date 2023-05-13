@@ -28,7 +28,7 @@ def make_database():
 
 
     for match in parsed_data:
-        c.execute("CREATE TABLE IF NOT EXISTS matches(MATCH_ID TEXT, \
+        c.execute("CREATE TABLE IF NOT EXISTS matches(matchId TEXT, \
         GAME_DURATION INTEGER, WIN INTEGER, BLUE_CHAMP_KILLS INTEGER, BLUE_BARON_KILLS INTEGER, \
         BLUE_DRAGON_KILLS INTEGER, BLUE_INHIB_KILLS INTEGER, \
         BLUE_HERALD_KILLS INTEGER, BLUE_TOWER_KILLS INTEGER, RED_CHAMP_KILLS, RED_BARON_KILLS INTEGER, \
@@ -73,7 +73,7 @@ def insert_participant_data():
                 value_list.append(data_value)
             # print(matchId, value_list)
         # time.sleep(5),{}
-        print(value_list)
+        #print(value_list)
         query = "INSERT INTO participants VALUES (" + '?,' * 123 + '?)'
         c.execute(query,[str(matchId)] + value_list)
     db_close()
@@ -107,33 +107,30 @@ def get_participant_data_names():
         lst.append(data)
     return(lst)
 
-print(get_participant_data_names())
 
 # get random matchId from database
 def get_random_id():
     c = db_connect()
-    c.execute('SELECT matchId FROM match_data ORDER BY RANDOM() LIMIT 1;')
+    c.execute('SELECT matchId FROM matches ORDER BY RANDOM() LIMIT 1;')
     data = c.fetchone()
     db_close()
     return data
 
-make_database()
-insert_participant_data()
-insert_match_data()
-
 # get participant info for specific match
 def get_participant_data(matchId):
     c = db_connect()
-    c.execute('SELECT * FROM participants WHERE matchId = ?;', (matchId,))
-    data = c.fetchall()
+    c.execute('SELECT * FROM participants WHERE matchId = ?;', [matchId])
+    data = list(c.fetchall()[0])
+    data[8] = data[8].replace("'", "\"")
+    data[8] = json.loads(data[8])
     db_close()
     return data
 
 # get match info for specifc match
 def get_match_data(matchId):
     c = db_connect()
-    c.execute('SELECT * FROM matches WHERE matchId = ?;', (matchId,))
-    data = c.fetchall()
+    c.execute('SELECT * FROM matches WHERE matchId = ?;', [matchId])
+    data = c.fetchall()[0]
     db_close()
     return data
 
