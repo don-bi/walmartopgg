@@ -28,4 +28,4 @@ if __name__ == '__main__':
         db.insert_participant_data()
         db.insert_match_data()
     app.debug = True
-    app.run()
+    app.run(host='0.0.0.0')
