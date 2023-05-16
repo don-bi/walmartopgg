@@ -119,13 +119,15 @@ def get_random_id():
 # get participant info for specific match
 def get_participant_data(matchId):
     c = db_connect()
+    db = sqlite3.connect(DB_FILE)
+    db.row_factory = sqlite3.Row
+    c = db.cursor()
     c.execute('SELECT * FROM participants WHERE matchId = ?;', [matchId])
-    data = list(c.fetchall()[0])
-    data[8] = data[8].replace("'", "\"")
-    data[8] = json.loads(data[8])
+    data = c.fetchall()
     db_close()
-    return data
-
+    return dict(data[0])
+    
+    
 # get match info for specifc match
 def get_match_data(matchId):
     c = db_connect()
@@ -140,3 +142,9 @@ def get_match_data(matchId):
 #     c.execute('INSERT INTO grassmeter(Quiz_Grass, Grass, Game_Grass) VALUES (?, ?, ?);', (0, 0, 0))
 #     db.commit()
 #     #db_close() Dont know what exactly the problem is but dont uncomment this for signup to work
+
+# make_database()
+# insert_match_data()
+# insert_participant_data()
+# print(get_participant_data("NA1_4642365867"))
+get_participant_data("NA1_4642365867")
