@@ -1,5 +1,5 @@
 import sqlite3
-import random, os, json, time
+import random, os, json, time, pprint as pp
 
 global DB_FILE
 DB_FILE = "database.db"
@@ -60,22 +60,18 @@ def insert_participant_data():
     c = db_connect()
     data_keys = get_participant_data_names()
     for matchId in parsed_data:
-        value_list = []
-        for key in data_keys:
-            # print(data_keys)
-            data_value = parsed_data[matchId]['info']['participants'][0].get(key)
-            # print(data_value)
-            if (data_value == None):
-                value_list.append(0)
-            elif (isinstance(data_value, dict)):
-                value_list.append(str(data_value))
-            else:
-                value_list.append(data_value)
-            # print(matchId, value_list)
-        # time.sleep(5),{}
-        #print(value_list)
-        query = "INSERT INTO participants VALUES (" + '?,' * 123 + '?)'
-        c.execute(query,[str(matchId)] + value_list)
+        for i in range(len(parsed_data[matchId]['info']['participants'])):
+            value_list = []
+            for key in data_keys: 
+                data_value = parsed_data[matchId]['info']['participants'][i].get(key)
+                if (data_value == None):
+                    value_list.append(0)
+                elif (isinstance(data_value, dict)):
+                    value_list.append(str(data_value))
+                else:
+                    value_list.append(data_value)
+            query = "INSERT INTO participants VALUES (" + '?,' * 123 + '?)'
+            c.execute(query,[str(matchId)] + value_list)
     db_close()
 
 def insert_match_data():
@@ -125,7 +121,7 @@ def get_participant_data(matchId):
     c.execute('SELECT * FROM participants WHERE matchId = ?;', [matchId])
     data = c.fetchall()
     db_close()
-    return dict(data[0])
+    return list(map(lambda item:dict(item[0]),[list(data) for row in data]))
     
     
 # get match info for specifc match
@@ -142,9 +138,3 @@ def get_match_data(matchId):
 #     c.execute('INSERT INTO grassmeter(Quiz_Grass, Grass, Game_Grass) VALUES (?, ?, ?);', (0, 0, 0))
 #     db.commit()
 #     #db_close() Dont know what exactly the problem is but dont uncomment this for signup to work
-
-# make_database()
-# insert_match_data()
-# insert_participant_data()
-# print(get_participant_data("NA1_4642365867"))
-get_participant_data("NA1_4642365867")
