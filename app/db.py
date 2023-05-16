@@ -27,31 +27,31 @@ def make_database():
     c = db.cursor()
 
 
-    for match in parsed_data:
-        c.execute("CREATE TABLE IF NOT EXISTS matches(matchId TEXT, \
-        GAME_DURATION INTEGER, WIN INTEGER, BLUE_CHAMP_KILLS INTEGER, BLUE_BARON_KILLS INTEGER, \
-        BLUE_DRAGON_KILLS INTEGER, BLUE_INHIB_KILLS INTEGER, \
-        BLUE_HERALD_KILLS INTEGER, BLUE_TOWER_KILLS INTEGER, RED_CHAMP_KILLS, RED_BARON_KILLS INTEGER, \
-        RED_DRAGON_KILLS INTEGER, RED_INHIB_KILLS INTEGER, \
-        RED_HERALD_KILLS INTEGER, RED_TOWER_KILLS INTEGER);")
+    c.execute("CREATE TABLE IF NOT EXISTS matches(matchId TEXT, \
+    GAME_DURATION INTEGER, WIN INTEGER, BLUE_CHAMP_KILLS INTEGER, BLUE_BARON_KILLS INTEGER, \
+    BLUE_DRAGON_KILLS INTEGER, BLUE_INHIB_KILLS INTEGER, \
+    BLUE_HERALD_KILLS INTEGER, BLUE_TOWER_KILLS INTEGER, RED_CHAMP_KILLS, RED_BARON_KILLS INTEGER, \
+    RED_DRAGON_KILLS INTEGER, RED_INHIB_KILLS INTEGER, \
+    RED_HERALD_KILLS INTEGER, RED_TOWER_KILLS INTEGER);")
+    
+    c.execute('''CREATE TABLE IF NOT EXISTS participants (matchId TEXT,
+               allInPings INT,assistMePings INT,assists INT,baitPings INT,baronKills INT,basicPings INT,bountyLevel INT,challenges TEXT,
+               champExperience INT,champLevel INT,championId INT,championName TEXT,championTransform INT,commandPings INT,consumablesPurchased INT,
+               damageDealtToBuildings INT,damageDealtToObjectives INT,damageDealtToTurrets INT,damageSelfMitigated INT,dangerPings INT,deaths INT,detectorWardsPlaced INT,doubleKills INT,
+               dragonKills INT,eligibleForProgression INT,enemyMissingPings INT,enemyVisionPings INT,firstBloodAssist INT,firstBloodKill INT,firstTowerAssist INT,
+               firstTowerKill INT,gameEndedInEarlySurrender INT,gameEndedInSurrender INT,getBackPings INT,goldEarned INT,goldSpent INT,holdPings INT,
+               individualPosition TEXT,inhibitorKills INT,inhibitorTakedowns INT,inhibitorsLost INT,item0 INT,item1 INT,item2 INT,
+               item3 INT,item4 INT,item5 INT,item6 INT,itemsPurchased INT,killingSprees INT,kills INT,lane TEXT,largestCriticalStrike INT,
+               largestKillingSpree INT,largestMultiKill INT,longestTimeSpentLiving INT,magicDamageDealt INT,magicDamageDealtToChampions INT,magicDamageTaken INT,needVisionPings INT,
+               neutralMinionsKilled INT,nexusKills INT,nexusLost INT,nexusTakedowns INT,objectivesStolen INT,objectivesStolenAssists INT,
+               onMyWayPings INT,participantId INT,pentaKills INT,perks TEXT,physicalDamageDealt INT,physicalDamageDealtToChampions INT,physicalDamageTaken INT,
+               profileIcon INT,pushPings INT,puuid TEXT,quadraKills INT,riotIdName TEXT,riotIdTagline TEXT,role TEXT,
+               sightWardsBoughtInGame INT,spell1Casts INT,spell2Casts INT,spell3Casts INT,spell4Casts INT,summoner1Casts INT,summoner1Id INT,summoner2Casts INT,summoner2Id INT,
+               summonerId TEXT,summonerLevel INT,summonerName TEXT,teamEarlySurrendered INT,teamId INT,teamPosition TEXT,timeCCingOthers INT,timePlayed INT,totalAllyJungleMinionsKilled INT,
+               totalDamageDealt INT,totalDamageDealtToChampions INT,totalDamageShieldedOnTeammates INT,totalDamageTaken INT,totalEnemyJungleMinionsKilled INT,totalHeal INT,totalHealsOnTeammates INT,totalMinionsKilled INT,
+               totalTimeCCDealt INT,totalTimeSpentDead INT,totalUnitsHealed INT,tripleKills INT,trueDamageDealt INT,trueDamageDealtToChampions INT,trueDamageTaken INT,turretKills INT,turretTakedowns INT,
+               turretsLost INT,unrealKills INT,visionClearedPings INT,visionScore INT,visionWardsBoughtInGame INT,wardsKilled INT,wardsPlaced INT,win INT)''')
 
-        c.execute('''CREATE TABLE IF NOT EXISTS participants (matchId TEXT,
-                   allInPings INT,assistMePings INT,assists INT,baitPings INT,baronKills INT,basicPings INT,bountyLevel INT,challenges TEXT,
-                   champExperience INT,champLevel INT,championId INT,championName TEXT,championTransform INT,commandPings INT,consumablesPurchased INT,
-                   damageDealtToBuildings INT,damageDealtToObjectives INT,damageDealtToTurrets INT,damageSelfMitigated INT,dangerPings INT,deaths INT,detectorWardsPlaced INT,doubleKills INT,
-                   dragonKills INT,eligibleForProgression INT,enemyMissingPings INT,enemyVisionPings INT,firstBloodAssist INT,firstBloodKill INT,firstTowerAssist INT,
-                   firstTowerKill INT,gameEndedInEarlySurrender INT,gameEndedInSurrender INT,getBackPings INT,goldEarned INT,goldSpent INT,holdPings INT,
-                   individualPosition TEXT,inhibitorKills INT,inhibitorTakedowns INT,inhibitorsLost INT,item0 INT,item1 INT,item2 INT,
-                   item3 INT,item4 INT,item5 INT,item6 INT,itemsPurchased INT,killingSprees INT,kills INT,lane TEXT,largestCriticalStrike INT,
-                   largestKillingSpree INT,largestMultiKill INT,longestTimeSpentLiving INT,magicDamageDealt INT,magicDamageDealtToChampions INT,magicDamageTaken INT,needVisionPings INT,
-                   neutralMinionsKilled INT,nexusKills INT,nexusLost INT,nexusTakedowns INT,objectivesStolen INT,objectivesStolenAssists INT,
-                   onMyWayPings INT,participantId INT,pentaKills INT,perks TEXT,physicalDamageDealt INT,physicalDamageDealtToChampions INT,physicalDamageTaken INT,
-                   profileIcon INT,pushPings INT,puuid TEXT,quadraKills INT,riotIdName TEXT,riotIdTagline TEXT,role TEXT,
-                   sightWardsBoughtInGame INT,spell1Casts INT,spell2Casts INT,spell3Casts INT,spell4Casts INT,summoner1Casts INT,summoner1Id INT,summoner2Casts INT,summoner2Id INT,
-                   summonerId TEXT,summonerLevel INT,summonerName TEXT,teamEarlySurrendered INT,teamId INT,teamPosition TEXT,timeCCingOthers INT,timePlayed INT,totalAllyJungleMinionsKilled INT,
-                   totalDamageDealt INT,totalDamageDealtToChampions INT,totalDamageShieldedOnTeammates INT,totalDamageTaken INT,totalEnemyJungleMinionsKilled INT,totalHeal INT,totalHealsOnTeammates INT,totalMinionsKilled INT,
-                   totalTimeCCDealt INT,totalTimeSpentDead INT,totalUnitsHealed INT,tripleKills INT,trueDamageDealt INT,trueDamageDealtToChampions INT,trueDamageTaken INT,turretKills INT,turretTakedowns INT,
-                   turretsLost INT,unrealKills INT,visionClearedPings INT,visionScore INT,visionWardsBoughtInGame INT,wardsKilled INT,wardsPlaced INT,win INT)''')
     db.commit()
     c.close()
 
