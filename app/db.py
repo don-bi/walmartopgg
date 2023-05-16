@@ -58,8 +58,10 @@ def make_database():
 
 def insert_participant_data():
     c = db_connect()
-    data_keys = get_participant_data_names()
-    for matchId in parsed_data:
+    data_keys = get_participant_data_names() #list of all data keys
+    
+    #insert data for each match
+    for matchId in parsed_data: 
         for i in range(len(parsed_data[matchId]['info']['participants'])):
             value_list = []
             for key in data_keys: 
@@ -72,6 +74,7 @@ def insert_participant_data():
                     value_list.append(data_value)
             query = "INSERT INTO participants VALUES (" + '?,' * 123 + '?)'
             c.execute(query,[str(matchId)] + value_list)
+            
     db_close()
 
 def insert_match_data():
@@ -113,7 +116,7 @@ def get_random_id():
     return data
 
 # get participant info for specific match
-def get_participant_data(matchId):
+def get_match_participant_data(matchId):
     c = db_connect()
     db = sqlite3.connect(DB_FILE)
     db.row_factory = sqlite3.Row
@@ -121,7 +124,34 @@ def get_participant_data(matchId):
     c.execute('SELECT * FROM participants WHERE matchId = ?;', [matchId])
     data = c.fetchall()
     db_close()
-    return list(map(lambda item:dict(item[0]),[list(data) for row in data]))
+    unfiltered_data = list(map(lambda item:dict(item),data)) #data without team and roles as keys
+    filtered_data = {} #data with team and role as keys <team>_<role> (red_support)
+    for participant in unfiltered_data:
+        # add team to key string
+        key_string = ""
+        if participant['teamId'] == 100:
+            key_string += "blue"
+        else:
+            key_string += "red"
+        
+        # add role to key string
+        match participant['teamPosition']:
+            case "TOP":
+                key_string += "Top"
+            case "JUNGLE":
+                key_string += "Jungle"
+            case "MIDDLE":
+                key_string += "Mid"
+            case "BOTTOM":
+                key_string += "Bot"
+            case "UTILITY":
+                key_string += "Support"
+        
+        filtered_data[key_string] = participant
+        
+    # final output {blueTop: {}, blueJungle: {}, blueBot: {} ...}
+    return filtered_data
+            
     
     
 # get match info for specifc match
@@ -138,3 +168,8 @@ def get_match_data(matchId):
 #     c.execute('INSERT INTO grassmeter(Quiz_Grass, Grass, Game_Grass) VALUES (?, ?, ?);', (0, 0, 0))
 #     db.commit()
 #     #db_close() Dont know what exactly the problem is but dont uncomment this for signup to work
+
+# make_database()
+# insert_match_data()
+# insert_participant_data()
+# print(get_match_participant_data('NA1_4642365867'))
