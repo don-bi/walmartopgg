@@ -17,7 +17,7 @@
             </div>
             {% endfor %}
         </div>
-        <img class="summoners-rift-map" src="https://external-preview.redd.it/VFYUc40TT_uNwCbX0cVZP7_P26YirTW36g1Du0oQbAk.jpg?auto=webp&s=c994e229191c28c6b90a739bbb71b5cd944a66c7" alt="summoner's rift">
+        <img class="summoners-rift-map" src="https://map.riftkit.net/img/rift/normal.jpg" alt="summoner's rift">
         <div class="red side">
             {% for red_position in positions[1] %}
             <div class="player">
@@ -27,5 +27,7 @@
             {% endfor %}
         </div>
     </div>
+
+    <script src={{url_for('static', filename='js/match.js')}}></script>
 </body>
 </html>

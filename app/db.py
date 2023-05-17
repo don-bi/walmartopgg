@@ -2,10 +2,10 @@ import sqlite3
 import random, os, json, time, pprint as pp
 
 global DB_FILE
-DB_FILE = "database.db"
-
-# parse data from json
 current_dir = os.path.dirname(__file__)
+DB_FILE = os.path.join(current_dir, 'database.db')
+
+# parse data from json file
 file_path = os.path.join(current_dir, 'match_data.json')
 
 with open(file_path) as f:

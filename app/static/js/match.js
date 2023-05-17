@@ -1,0 +1,1 @@
+const playerBtns = document.querySelectorAll('.players');

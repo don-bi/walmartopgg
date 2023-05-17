@@ -26,7 +26,9 @@ def match(match_id):
 
 
 if __name__ == '__main__':
-    if not os.path.exists('database.db'):
+    current_dir = os.path.dirname(__file__)
+    db_path = os.path.join(current_dir, 'database.db')
+    if not os.path.exists(db_path):
         db.make_database()
         db.insert_participant_data()
         db.insert_match_data()
