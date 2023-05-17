@@ -1,6 +1,11 @@
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
     height: 100vh;
     background-color: gray;
+    margin: 0;
 }
 
 .random-match {
@@ -35,7 +40,68 @@ body {
 
 /* match.html stuff */
 .summoners-rift-map {
-    width: 30vw;
+    height: 80vh;
     border-radius: 15px;
-    box-shadow: 0px 1px 2px 1px rgb(218, 218, 218);
+    box-shadow: 1px 1px 8px -2px;
+}
+
+.top-section {
+    display: flex;
+    flex: 2 ; 
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10vw;
+    height: 100vh;
+}
+
+.side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2vh;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+.champion_icons {
+    width: 7vw;
+    border: 2px solid rgb(188, 188, 188);
+    border-radius: 100%;
+    box-shadow: 1px 1px 10px -4px;
+    transition: 0.2s;
+}
+
+@keyframes bulging_icon {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.champion_icons:hover {
+    animation: bulging_icon 1.5s infinite;
+    cursor: pointer;
+    border-color: rgb(153, 241, 241);
+}
+
+.champion_icons:hover + .username {
+    color: rgb(153, 241, 241);
+}
+
+.username {
+    font-weight: 500;
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 1px 1px rgb(166, 166, 166);
+    letter-spacing: 2px;
+    transition: 0.2s;
 }

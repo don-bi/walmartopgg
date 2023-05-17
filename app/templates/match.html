@@ -9,18 +9,22 @@
 </head>
 <body>
     <div class="top-section">
-        <div class="blue-side">
-            <div class="players">
-                <img src="" alt="">
-                <div class="username"></div>
+        <div class="blue side">
+            {% for blue_position in positions[0] %}
+            <div class="player">
+                <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[blue_position]['championName']}}_0.jpg" alt="">
+                <div class="username">{{participant_data[blue_position]['summonerName']}}</div>
             </div>
+            {% endfor %}
         </div>
         <img class="summoners-rift-map" src="https://external-preview.redd.it/VFYUc40TT_uNwCbX0cVZP7_P26YirTW36g1Du0oQbAk.jpg?auto=webp&s=c994e229191c28c6b90a739bbb71b5cd944a66c7" alt="summoner's rift">
-        <div class="red-side">
-            <div class="players">
-                <img src="" alt="">
-                <div class="username"></div>
+        <div class="red side">
+            {% for red_position in positions[1] %}
+            <div class="player">
+                <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[red_position]['championName']}}_0.jpg" alt="">
+                <div class="username">{{participant_data[red_position]['summonerName']}}</div>
             </div>
+            {% endfor %}
         </div>
     </div>
 </body>

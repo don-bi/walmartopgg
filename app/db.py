@@ -141,9 +141,9 @@ def get_match_participant_data(matchId):
             case "JUNGLE":
                 key_string += "Jungle"
             case "MIDDLE":
-                key_string += "Mid"
+                key_string += "Middle"
             case "BOTTOM":
-                key_string += "Bot"
+                key_string += "Bottom"
             case "UTILITY":
                 key_string += "Support"
         

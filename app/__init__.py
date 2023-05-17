@@ -18,8 +18,11 @@ def random():
 @app.route('/match/<match_id>', methods=['GET'])
 def match(match_id):
     match_data = db.get_match_data(match_id)
-    participant_data = db.get_participant_data(match_id)
-    return render_template('match.html', match_id=match_id, match_data=match_data, participant_data=participant_data)
+    participant_data = db.get_match_participant_data(match_id)
+    positions = [['blueTop', 'blueJungle', 'blueMiddle', 'blueBottom', 'blueSupport'], 
+                 ['redTop', 'redJungle', 'redMiddle', 'redBottom', 'redSupport']]
+    print(participant_data)
+    return render_template('match.html', match_id=match_id, match_data=match_data, participant_data=participant_data, positions=positions)
 
 
 if __name__ == '__main__':
