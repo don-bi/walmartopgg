@@ -135,17 +135,17 @@ def get_match_participant_data(matchId):
             key_string += "red"
         
         # add role to key string
-        match participant['teamPosition']:
-            case "TOP":
-                key_string += "Top"
-            case "JUNGLE":
-                key_string += "Jungle"
-            case "MIDDLE":
-                key_string += "Middle"
-            case "BOTTOM":
-                key_string += "Bottom"
-            case "UTILITY":
-                key_string += "Support"
+        pos = participant['teamPosition'] 
+        if pos == "TOP":
+            key_string += "Top"
+        elif pos == "JUNGLE":
+            key_string += "Jungle"
+        elif pos == "MIDDLE":
+            key_string += "Middle"
+        elif pos == "BOTTOM":
+            key_string += "Bottom"
+        elif pos == "UTILITY":
+            key_string += "Support"
         
         filtered_data[key_string] = participant
         
