@@ -113,7 +113,7 @@ def champ_wr(champion, role):
     lst = [i[0] for i in lst]
     wins = 0; losses = 0
     for i in lst:
-        if i == 0:
+        if i == 1:
             wins+=1
         else:
             losses+=1
