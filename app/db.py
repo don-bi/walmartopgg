@@ -1,6 +1,6 @@
 import sqlite3
 import random, os, json, time, pprint as pp
-
+import statistics as stats
 global DB_FILE
 current_dir = os.path.dirname(__file__)
 DB_FILE = os.path.join(current_dir, 'database.db')
@@ -53,7 +53,7 @@ def make_database():
                turretsLost INT,unrealKills INT,visionClearedPings INT,visionScore INT,visionWardsBoughtInGame INT,wardsKilled INT,wardsPlaced INT,win INT)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS champions(championName TEXT, role TEXT, winRate INT, commonSpell1 INT, commonSpell2 INT,
-    kda INT, item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT)''')
+    kda INT, item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT, gameDuration INT)''')
     db.commit()
     c.close()
 
@@ -88,8 +88,6 @@ def insert_match_data():
     db_close()
     
 
-def make_champion_data():
-    c.execute('''CREATE TABLE champion_stats (championName TEXT, )''')
 
 # print sqlite table
 def print_sqlite_table(table_name):
@@ -98,6 +96,45 @@ def print_sqlite_table(table_name):
     data = c.fetchall()
     db_close()
     return data
+
+def get_champ_names():
+    c = db_connect()
+    c.execute('SELECT DISTINCT championName FROM participants;')
+    data = list(map(''.join, c.fetchall()))
+    db_close()
+    return data
+
+def most_common_items(champion):
+    ret = []
+    c = db_connect()
+    c.execute('SELECT item1 FROM participants WHERE championName=?', [champion])
+    ret.append(stats.mode(c.fetchall())[0])
+
+    c.execute('SELECT item2 FROM participants WHERE championName=? AND item2<>?', (champion, ret[0]))
+    ret.append(stats.mode(c.fetchall())[0])
+
+    c.execute('SELECT item3 FROM participants WHERE championName=? AND item3<>? AND item3<>?', (champion, ret[0], ret[1]))
+    ret.append(stats.mode(c.fetchall())[0])
+
+    c.execute('SELECT item4 FROM participants WHERE championName=? AND item4<>? AND item4<>? AND item4<>?', (champion, ret[0], ret[1], ret[2]))
+    ret.append(stats.mode(c.fetchall())[0])
+
+    c.execute('SELECT item5 FROM participants WHERE championName=? AND item5<>? AND item5<>? AND item5<>? AND item5<>?', (champion, ret[0], ret[1], ret[2], ret[3]))
+    ret.append(stats.mode(c.fetchall())[0])
+
+    c.execute('SELECT item6 FROM participants WHERE championName=? AND item6<>? AND item6<>? AND item6<>? AND item6<>? AND item6<>?', (champion, ret[0], ret[1], ret[2], ret[3], ret[4]))
+    ret.append(stats.mode(c.fetchall())[0])
+    return ret
+
+print(most_common_items('Akali'))
+
+def calculate_champ_data():
+    lst = get_champ_names()
+    for champ in lst:
+        item_list = most_common_items(champion)
+
+
+        
 
 # print(print_sqlite_table('participants'))
 
