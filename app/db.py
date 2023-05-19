@@ -1,6 +1,6 @@
 import sqlite3
 import random, os, json, time, pprint as pp
-import statistics as stats
+from collections import Counter
 global DB_FILE
 current_dir = os.path.dirname(__file__)
 DB_FILE = os.path.join(current_dir, 'database.db')
@@ -97,6 +97,7 @@ def print_sqlite_table(table_name):
     db_close()
     return data
 
+# get list of all champ names in db
 def get_champ_names():
     c = db_connect()
     c.execute('SELECT DISTINCT championName FROM participants;')
@@ -104,34 +105,44 @@ def get_champ_names():
     db_close()
     return data
 
-def most_common_items(champion):
-    ret = []
+# get winrate for a champ by role
+def champ_wr(champion, role):
     c = db_connect()
-    c.execute('SELECT item1 FROM participants WHERE championName=?', [champion])
-    ret.append(stats.mode(c.fetchall())[0])
+    c.execute('SELECT win FROM participants WHERE championName=? AND individualPosition=?', (champion, role))
+    lst = c.fetchall()
+    lst = [i[0] for i in lst]
+    wins = 0; losses = 0
+    for i in lst:
+        if i == 0:
+            wins+=1
+        else:
+            losses+=1
+    total_matches = losses + wins
+    if  total_matches == 0: return None
+    return wins/(losses+wins)
+print(champ_wr("Akali", "BOTTOM"))
 
-    c.execute('SELECT item2 FROM participants WHERE championName=? AND item2<>?', (champion, ret[0]))
-    ret.append(stats.mode(c.fetchall())[0])
-
-    c.execute('SELECT item3 FROM participants WHERE championName=? AND item3<>? AND item3<>?', (champion, ret[0], ret[1]))
-    ret.append(stats.mode(c.fetchall())[0])
-
-    c.execute('SELECT item4 FROM participants WHERE championName=? AND item4<>? AND item4<>? AND item4<>?', (champion, ret[0], ret[1], ret[2]))
-    ret.append(stats.mode(c.fetchall())[0])
-
-    c.execute('SELECT item5 FROM participants WHERE championName=? AND item5<>? AND item5<>? AND item5<>? AND item5<>?', (champion, ret[0], ret[1], ret[2], ret[3]))
-    ret.append(stats.mode(c.fetchall())[0])
-
-    c.execute('SELECT item6 FROM participants WHERE championName=? AND item6<>? AND item6<>? AND item6<>? AND item6<>? AND item6<>?', (champion, ret[0], ret[1], ret[2], ret[3], ret[4]))
-    ret.append(stats.mode(c.fetchall())[0])
+# get most common item build for a champ by role
+def most_common_items(champion, role):
+    c = db_connect()
+    c.execute('''SELECT item1, item2, item3, item4, item5, item6 FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    ret = c.fetchall()
+    ret = [item for row in ret for item in row]
+    counter = Counter(ret)
+    ret = counter.most_common(6)
+    ret = [i[0] for i in ret]
     return ret
 
-print(most_common_items('Akali'))
+#print(most_common_items('Akali'))
+
 
 def calculate_champ_data():
     lst = get_champ_names()
     for champ in lst:
-        item_list = most_common_items(champion)
+         for role in ['TOP', 'JUNGLE', 'MIDDLE', 'BOTTOM', 'UTILITY']:
+            item_list = most_common_items(champion, individualPosition)
+            
 
 
         
