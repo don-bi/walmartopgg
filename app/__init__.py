@@ -32,7 +32,7 @@ if __name__ == '__main__':
         db.make_database()
         db.insert_participant_data()
         db.insert_match_data()
-       # db.insert_champ_data()
+        db.insert_champ_data()
         db.insert_champ_data_by_roles()
     app.debug = True
     app.run(host='0.0.0.0')

@@ -125,7 +125,7 @@ def most_common_items_specific(champion, role):
     counter = Counter(ret)
     ret = counter.most_common(6)
     ret = [i[0] for i in ret]
-    if len(ret) == 0: return None
+    if len(ret) == 0: return [None] * 6
     if len(ret) < 6:
         for i in range(6 - len(ret)):
             ret.append(None)
@@ -141,7 +141,7 @@ def most_common_spells_specific(champion, role):
     counter = Counter(ret)
     ret = counter.most_common(2)
     ret = [i[0] for i in ret]
-    if len(ret) == 0: return None
+    if len(ret) == 0: return [None] * 2
     return ret
 
 #get most common runes for a champ by role
@@ -201,7 +201,7 @@ def most_common_items(champion):
     ret = counter.most_common(6)
     ret = [i[0] for i in ret] 
     if len(ret) == 0:
-        return None
+        return [None] * 6
     if len(ret) < 6:
         for i in range(6 - len(ret)):
             ret.append(None)
@@ -219,7 +219,7 @@ def most_common_spells(champion):
     ret = counter.most_common(2)
     ret = [i[0] for i in ret]
     if len(ret) == 0:
-        return None
+        return [None] * 2
     return ret
 
 # get most common runes for a champ regardless of role
@@ -259,6 +259,22 @@ def avg_game_duration(champion):
         return None
     return sum(ret) / len(ret)
 
+#insert general champion data into database
+def insert_champ_data():
+    lst = get_champ_names()
+    for champ in lst:
+        items = most_common_items(champ)
+        winrate = champ_wr(champ)
+        spells = most_common_spells(champ)
+        runes = most_common_runes(champ)
+        kda = champ_kda(champ)
+        game_duration = avg_game_duration(champ)
+        query = "INSERT INTO champions VALUES (" + '?,' * 13 + '?)'
+        c = db_connect()
+        c.execute(query, [champ, 'ALL', winrate, spells[0], spells[1], kda, items[0], items[1], items[2], items[3], items[4], items[5], game_duration, str(runes)])
+        db_close()
+    
+
 #insert champion data into database
 def insert_champ_data_by_roles():
     lst = get_champ_names()
@@ -272,10 +288,8 @@ def insert_champ_data_by_roles():
             game_duration = avg_game_duration_specific(champ, role)
             c = db_connect()
             query = "INSERT INTO champions VALUES (" + '?,' * 13 + '?)'
-            if items == None or winrate == None or spells == None or runes == None or kda == None or game_duration == None:
-                continue
-            c.execute(query, (champ, role, winrate, spells[0], spells[1], kda, items[0], items[1], items[2], items[3], items[4], items[5], game_duration, str(runes)))
-
+            c.execute(query, [champ, role, winrate, spells[0], spells[1], kda, items[0], items[1], items[2], items[3], items[4], items[5], game_duration, str(runes)])
+            db_close()
 # print(print_sqlite_table('participants'))
 
 # get participant data names
