@@ -62,14 +62,33 @@ body {
     flex-direction: column;
     justify-content: center;
     gap: 2vh;
-    padding: 0 7vw;
+    padding: 0 4vw;
 }
 
 .player {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3vw;
+}
+
+.icon {
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 3px;
+}
+
+.position-name {
+    font-weight: 500;
+    text-shadow: 1px 1px 1px rgb(166, 166, 166);
+    letter-spacing: 2px;
+    transition: 0.2s;
+    color:rgb(153, 241, 241);
+}
+
+.red .position-name {
+    color: rgb(247, 112, 89);
 }
 
 .champion_icons {
@@ -98,8 +117,16 @@ body {
     border-color: rgb(153, 241, 241);
 }
 
+.red .champion_icons:hover {
+    border-color: rgb(247, 112, 89);
+}
+
 .champion_icons:hover + .username {
     color: rgb(153, 241, 241);
+}
+
+.red .champion_icons:hover + .username {
+    color: rgb(247, 112, 89);
 }
 
 .username {
