@@ -1,6 +1,6 @@
 import sqlite3
 import random, os, json, time, pprint as pp
-
+from collections import Counter
 global DB_FILE
 current_dir = os.path.dirname(__file__)
 DB_FILE = os.path.join(current_dir, 'database.db')
@@ -44,7 +44,7 @@ def make_database():
                item3 INT,item4 INT,item5 INT,item6 INT,itemsPurchased INT,killingSprees INT,kills INT,lane TEXT,largestCriticalStrike INT,
                largestKillingSpree INT,largestMultiKill INT,longestTimeSpentLiving INT,magicDamageDealt INT,magicDamageDealtToChampions INT,magicDamageTaken INT,needVisionPings INT,
                neutralMinionsKilled INT,nexusKills INT,nexusLost INT,nexusTakedowns INT,objectivesStolen INT,objectivesStolenAssists INT,
-               onMyWayPings INT,participantId INT,pentaKills INT,perks TEXT,physicalDamageDealt INT,physicalDamageDealtToChampions INT,physicalDamageTaken INT,
+               onMyWayPings INT,participantId INT,pentaKills INT,perks BLOB,physicalDamageDealt INT,physicalDamageDealtToChampions INT,physicalDamageTaken INT,
                profileIcon INT,pushPings INT,puuid TEXT,quadraKills INT,riotIdName TEXT,riotIdTagline TEXT,role TEXT,
                sightWardsBoughtInGame INT,spell1Casts INT,spell2Casts INT,spell3Casts INT,spell4Casts INT,summoner1Casts INT,summoner1Id INT,summoner2Casts INT,summoner2Id INT,
                summonerId TEXT,summonerLevel INT,summonerName TEXT,teamEarlySurrendered INT,teamId INT,teamPosition TEXT,timeCCingOthers INT,timePlayed INT,totalAllyJungleMinionsKilled INT,
@@ -52,8 +52,8 @@ def make_database():
                totalTimeCCDealt INT,totalTimeSpentDead INT,totalUnitsHealed INT,tripleKills INT,trueDamageDealt INT,trueDamageDealtToChampions INT,trueDamageTaken INT,turretKills INT,turretTakedowns INT,
                turretsLost INT,unrealKills INT,visionClearedPings INT,visionScore INT,visionWardsBoughtInGame INT,wardsKilled INT,wardsPlaced INT,win INT)''')
 
-    c.execute('''CREATE TABLE IF NOT EXISTS champions(championName TEXT, role TEXT, winRate INT, commonSpell1 INT, commonSpell2 INT,
-    kda INT, item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS champions(championName TEXT, role TEXT, winRate INT, kills INT, deaths INT, assists INT, commonSpell1 INT, commonSpell2 INT,
+    item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT, gameDuration INT, runes BLOB)''')
     db.commit()
     c.close()
 
@@ -88,8 +88,6 @@ def insert_match_data():
     db_close()
     
 
-def make_champion_data():
-    c.execute('''CREATE TABLE champion_stats (championName TEXT, )''')
 
 # print sqlite table
 def print_sqlite_table(table_name):
@@ -99,6 +97,144 @@ def print_sqlite_table(table_name):
     db_close()
     return data
 
+# get list of all champ names in db
+def get_champ_names():
+    c = db_connect()
+    c.execute('SELECT DISTINCT championName FROM participants;')
+    data = list(map(''.join, c.fetchall()))
+    db_close()
+    return data
+
+# get winrate for a champ by role. Use sql query to find average of win column
+def champ_wr_specific(champion, role):
+    c = db_connect()
+    c.execute('''SELECT AVG(win) FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    wr = c.fetchone()[0]
+    return wr * 100 if wr else None
+# get most common item build for a champ by role
+def most_common_items_specific(champion, role):
+    c = db_connect()
+    c.execute('''SELECT item1, item2, item3, item4, item5, item6 FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    items = c.fetchall()
+    counter = Counter(item for row in items for item in row)
+    return [i[0] for i in counter.most_common(6)] + [None] * (6 - len(counter))
+
+#get most common summoner spells for a champ by role
+def most_common_spells_specific(champion, role):
+    c = db_connect()
+    c.execute('''SELECT summoner1Id, summoner2Id FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    spells = c.fetchall()
+    counter = Counter(spell for row in spells for spell in row)
+    return [i[0] for i in counter.most_common(2)] + [None] * (2 - len(counter))
+
+#get most common runes for a champ by role
+def most_common_runes_specific(champion, role):
+    c = db_connect()
+    c.execute('''SELECT perks FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    ret = c.fetchall()
+    counter = Counter(item for row in ret for item in row)
+    return counter.most_common(1)[0][0] if counter else None
+
+#get kda for a champ by role
+def champ_kda_specific(champion, role):
+    c = db_connect()
+    c.execute('''SELECT AVG(kills), AVG(deaths), AVG(assists) FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    return c.fetchone()
+
+#get average game duration for a champ by role
+def avg_game_duration_specific(champion, role):
+    c = db_connect()
+    c.execute('''SELECT AVG(timePlayed) FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    return c.fetchone()[0]
+
+# get winrate for a champ regardless of role
+def champ_wr(champion):
+    c = db_connect()
+    c.execute('''SELECT AVG(win) FROM participants 
+             WHERE championName=?''', [champion])
+    wr = c.fetchone()[0]
+    return wr * 100 if wr else None
+
+
+# get most common item build for a champ regardless of role
+def most_common_items(champion):
+    c = db_connect()
+    c.execute('''SELECT item1, item2, item3, item4, item5, item6 FROM participants 
+             WHERE championName=?''', [champion])
+    ret = c.fetchall()
+    counter = Counter(item for row in ret for item in row)
+    return [i[0] for i in counter.most_common(6)] + [None] * (6 - len(counter))
+
+
+# get most common summoner spells for a champ regardless of role
+def most_common_spells(champion):
+    c = db_connect()
+    c.execute('''SELECT summoner1Id, summoner2Id FROM participants 
+             WHERE championName=?''', [champion])
+    ret = c.fetchall()
+    counter = Counter(item for row in ret for item in row)
+    return [i[0] for i in counter.most_common(2)] + [None] * (2 - len(counter))
+
+# get most common runes for a champ regardless of role
+def most_common_runes(champion):
+    c = db_connect()
+    c.execute('''SELECT perks FROM participants 
+             WHERE championName=?''', [champion])
+    ret = c.fetchall()
+    counter = Counter(item for row in ret for item in row)
+    return counter.most_common(1)[0][0] if counter else None
+
+# get kda for a champ regardless of role
+def champ_kda(champion):
+    c = db_connect()
+    c.execute('''SELECT AVG(kills), AVG(deaths), AVG(assists) FROM participants 
+             WHERE championName=?''', [champion])
+    return c.fetchone()
+
+# get average game duration for a champ regardless of role
+def avg_game_duration(champion):
+    c = db_connect()
+    c.execute('''SELECT AVG(timePlayed) FROM participants 
+             WHERE championName=?''', [champion])
+    return c.fetchone()[0]
+
+#insert general champion data into database
+def insert_champ_data():
+    lst = get_champ_names()
+    for champ in lst:
+        items = most_common_items(champ)
+        winrate = champ_wr(champ)
+        spells = most_common_spells(champ)
+        runes = most_common_runes(champ)
+        kda = champ_kda(champ)
+        game_duration = avg_game_duration(champ)
+        query = "INSERT INTO champions VALUES (" + '?,' * 15 + '?)'
+        c = db_connect()
+        c.execute(query, (champ, 'ALL', winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, runes))
+        db_close()
+    
+
+#insert champion data into database
+def insert_champ_data_by_roles():
+    lst = get_champ_names()
+    for champ in lst:
+         for role in ['TOP', 'JUNGLE', 'MIDDLE', 'BOTTOM', 'UTILITY']:
+            items = most_common_items_specific(champ, role)
+            winrate = champ_wr_specific(champ, role)
+            spells = most_common_spells_specific(champ, role)
+            runes = most_common_runes_specific(champ, role)
+            kda = champ_kda_specific(champ, role)
+            game_duration = avg_game_duration_specific(champ, role)
+            c = db_connect()
+            query = "INSERT INTO champions VALUES (" + '?,' * 15 + '?)'
+            c.execute(query, (champ, role, winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, runes))
+            db_close()
 # print(print_sqlite_table('participants'))
 
 # get participant data names
