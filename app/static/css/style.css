@@ -76,6 +76,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 3px;
 }
 
@@ -111,7 +112,7 @@ body {
     }
 }
 
-.champion_icons:hover {
+.player .champion_icons:hover {
     animation: bulging_icon 1.5s infinite;
     cursor: pointer;
     border-color: rgb(153, 241, 241);
@@ -121,7 +122,7 @@ body {
     border-color: rgb(247, 112, 89);
 }
 
-.champion_icons:hover + .username {
+.player .champion_icons:hover + .username {
     color: rgb(153, 241, 241);
 }
 
@@ -129,10 +130,63 @@ body {
     color: rgb(247, 112, 89);
 }
 
-.username {
+.active .champion_icons {
+    border-color: rgb(153, 241, 241);
+}
+
+.active .champion_icons + .username {
+    color: rgb(153, 241, 241);
+}
+
+.red .active .champion_icons {
+    border-color: rgb(247, 112, 89);
+}
+
+.red .active .champion_icons + .username {
+    color: rgb(247, 112, 89);
+}
+
+.username, .champion-name {
     font-weight: 500;
     color: rgb(255, 255, 255);
     text-shadow: 1px 1px 1px rgb(166, 166, 166);
     letter-spacing: 2px;
     transition: 0.2s;
+}
+
+/* player-data stuff */
+.player-data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10vw;
+}
+
+.player-data .champion_icons {
+    width: 8vw;
+    border: none;
+    border-radius: 10px;
+    /* box-shadow: 1px 1px 10px -4px; */
+    box-shadow: none;
+    border: solid 2px rgba(188, 188, 188, 0);
+}
+
+.champion_icons:hover {
+    animation: none;
+    cursor: default;
+    border: solid 2px rgb(188, 188, 188);
+    cursor: pointer;
+}
+
+.kda-box {
+    display: flex;
+    gap: 8vw;
+}
+
+.kda {
+    font-weight: 500;
+    text-shadow: 1px 1px 1px rgb(166, 166, 166);
+    letter-spacing: 2px;
+    transition: 0.2s;
+    font-size: 2vw;
 }

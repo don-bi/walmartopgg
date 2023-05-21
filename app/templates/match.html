@@ -10,28 +10,30 @@
 <body>
     <div class="top-section">
         <div class="blue side">
-            {% for blue_position in range(5) %}
+            {% for blue_position_index in range(5) %}
+            {% set blue_position = positions[0][blue_position_index] %}
             <div class="player {{blue_position}}">
                 <div class="icon">
-                    <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[positions[0][blue_position]]['championName']}}_0.jpg" alt="">
-                    <div class="username">{{participant_data[positions[0][blue_position]]['summonerName']}}</div>
+                    <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[blue_position]['championName']}}_0.jpg" alt="">
+                    <div class="username">{{participant_data[blue_position]['summonerName']}}</div>
                 </div>
                 <div class="position-name">
-                    {{position_names[blue_position]}}
+                    {{position_names[blue_position_index]}}
                 </div>
             </div>
             {% endfor %}
         </div>
         <img class="summoners-rift-map" src="https://map.riftkit.net/img/rift/normal.jpg" alt="summoner's rift">
         <div class="red side">
-            {% for red_position in range(5) %}
+            {% for red_position_index in range(5) %}
+            {% set red_position = positions[1][red_position_index] %}
             <div class="player {{red_position}}">
                 <div class="position-name">
-                    {{position_names[red_position]}}
+                    {{position_names[red_position_index]}}
                 </div>
                 <div class="icon">
-                    <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[positions[1][red_position]]['championName']}}_0.jpg" alt="">
-                    <div class="username">{{participant_data[positions[1][red_position]]['summonerName']}}</div>
+                    <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[red_position]['championName']}}_0.jpg" alt="">
+                    <div class="username">{{participant_data[red_position]['summonerName']}}</div>
                 </div>
             </div>
             {% endfor %}
@@ -46,7 +48,16 @@
     {% for i in range(2) %}
         {% for position in positions[i] %}
         <div class="player-data {{position}}">
-            
+            <div class="icon">
+                <div class="champion-name">{{participant_data[position]['championName']}}</div>
+                <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[position]['championName']}}_0.jpg" alt="">
+                <div class="data username">{{participant_data[position]['summonerName']}}</div>
+            </div>
+            <div class="kda-box">
+                <div class="kda kills">{{participant_data[position]['kills']}} kills</div>
+                <div class="kda deaths">{{participant_data[position]['deaths']}} deaths</div>
+                <div class="kda assists">{{participant_data[position]['assists']}} assists</div>
+            </div>
         </div>
         {% endfor %}
     {% endfor %}
