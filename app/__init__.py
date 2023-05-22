@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    return render_template('index.html',champ_names = sorted(db.get_champ_names_fast()))
 
 @app.route('/random', methods=['POST'])
 def random():
@@ -24,8 +24,7 @@ def match(match_id):
     position_names = ['Top', 'Jungle', 'Middle', 'Bottom', 'Support']
     return render_template('match.html',str=str, match_id=match_id, match_data=match_data,
      participant_data=participant_data, positions=positions, position_names=position_names,
-     convert_item_id = db.convert_item_id, spell_data = db.get_spell_images(),
-     champ_kda_specifics = db.champ_kda_specific)
+     convert_item_id = db.convert_item_id, spell_data = db.get_spell_images())
 
 
 if __name__ == '__main__':

@@ -337,6 +337,13 @@ def get_spell_images():
     else:
         return None
 
+def get_champ_names_fast():
+    c = db_connect()
+    c.execute('SELECT DISTINCT championName FROM champions;')
+    data = list(map(''.join, c.fetchall()))
+    db_close()
+    return data
+
 # def create_user(username, password):
 #     c = db_connect()
 #     c.execute('INSERT INTO users(username, password, Did_Questions) VALUES (?, ?, ?);', (username, password, False))
