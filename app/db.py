@@ -99,7 +99,7 @@ def print_sqlite_table(table_name):
     db_close()
     return data
 
-# get list of all champ names in db
+# get list of all champ names in db. Use before db table is created.
 def get_champ_names():
     c = db_connect()
     c.execute('SELECT DISTINCT championName FROM participants;')
@@ -113,13 +113,16 @@ def champ_wr_specific(champion, role):
     c.execute('''SELECT AVG(win) FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
     wr = c.fetchone()[0]
+    db_close()
     return wr * 100 if wr else None
+    
 # get most common item build for a champ by role
 def most_common_items_specific(champion, role):
     c = db_connect()
     c.execute('''SELECT item1, item2, item3, item4, item5, item6 FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
     items = c.fetchall()
+    db_close()
     counter = Counter(item for row in items for item in row)
     return [i[0] for i in counter.most_common(6)] + [None] * (6 - len(counter))
 
@@ -129,6 +132,7 @@ def most_common_spells_specific(champion, role):
     c.execute('''SELECT summoner1Id, summoner2Id FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
     spells = c.fetchall()
+    db_close()
     counter = Counter(spell for row in spells for spell in row)
     return [i[0] for i in counter.most_common(2)] + [None] * (2 - len(counter))
 
@@ -138,6 +142,7 @@ def most_common_runes_specific(champion, role):
     c.execute('''SELECT perks FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
     ret = c.fetchall()
+    db_close()
     counter = Counter(item for row in ret for item in row)
     return counter.most_common(1)[0][0] if counter else None
 
@@ -146,14 +151,18 @@ def champ_kda_specific(champion, role):
     c = db_connect()
     c.execute('''SELECT AVG(kills), AVG(deaths), AVG(assists) FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
-    return c.fetchone()
+    ret = c.fetchone()
+    db_close()
+    return ret
 
 #get average game duration for a champ by role
 def avg_game_duration_specific(champion, role):
     c = db_connect()
     c.execute('''SELECT AVG(timePlayed) FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
-    return c.fetchone()[0]
+    ret = c.fetchone()[0]
+    db_close()
+    return ret
 
 #calculate cs for a champ by role
 def get_cs_specific(champion, role):
@@ -165,6 +174,7 @@ def get_cs_specific(champion, role):
     c.execute('''SELECT SUM(timePlayed) FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
     time = c.fetchone()[0]
+    db_close()
     if minionsKilled == None or time == None: return None
     return minionsKilled / time
 
@@ -173,28 +183,36 @@ def avg_dmgtaken_specific(champion, role):
     c = db_connect()
     c.execute('''SELECT AVG(totalDamageTaken) FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
-    return c.fetchone()[0]
+    ret = c.fetchone()[0]
+    db_close()
+    return ret
 
 # get avg taken for a champ disregarding role
 def avg_dmgtaken(champion):
     c = db_connect()
     c.execute('''SELECT AVG(totalDamageTaken) FROM participants 
              WHERE championName=?''', [champion])
-    return c.fetchone()[0]
+    ret = c.fetchone()[0]
+    db_close()
+    return ret
 
 # get avg dmgdealt for a champ by role
 def avg_dmgdealt_specific(champion, role):
     c = db_connect()
     c.execute('''SELECT AVG(totalDamageDealtToChampions) FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
-    return c.fetchone()[0]
+    ret = c.fetchone()[0]
+    db_close()
+    return ret
 
 # get avg dmgdealt for a champ disregarding role
 def avg_dmgdealt(champion):
     c = db_connect()
     c.execute('''SELECT AVG(totalDamageDealtToChampions) FROM participants 
              WHERE championName=?''', [champion])
-    return c.fetchone()[0]
+    ret = c.fetchone()[0]
+    db_close()  
+    return ret
 
 
 #calculate cs for a champ disregarding role
@@ -207,6 +225,7 @@ def get_cs(champion):
     c.execute('''SELECT SUM(timePlayed) FROM participants 
              WHERE championName=?''', [champion])
     time = c.fetchone()[0]
+    db_close()
     if minionsKilled == None or time == None: return None
     return minionsKilled / time
 
@@ -216,6 +235,7 @@ def champ_wr(champion):
     c.execute('''SELECT AVG(win) FROM participants 
              WHERE championName=?''', [champion])
     wr = c.fetchone()[0]
+    db_close()
     return wr * 100 if wr else None
 
 
@@ -225,6 +245,7 @@ def most_common_items(champion):
     c.execute('''SELECT item1, item2, item3, item4, item5, item6 FROM participants 
              WHERE championName=?''', [champion])
     ret = c.fetchall()
+    db_close()
     counter = Counter(item for row in ret for item in row)
     return [i[0] for i in counter.most_common(6)] + [None] * (6 - len(counter))
 
@@ -235,6 +256,7 @@ def most_common_spells(champion):
     c.execute('''SELECT summoner1Id, summoner2Id FROM participants 
              WHERE championName=?''', [champion])
     ret = c.fetchall()
+    db_close()
     counter = Counter(item for row in ret for item in row)
     return [i[0] for i in counter.most_common(2)] + [None] * (2 - len(counter))
 
@@ -244,6 +266,7 @@ def most_common_runes(champion):
     c.execute('''SELECT perks FROM participants 
              WHERE championName=?''', [champion])
     ret = c.fetchall()
+    db_close()
     counter = Counter(item for row in ret for item in row)
     return counter.most_common(1)[0][0] if counter else None
 
@@ -252,14 +275,18 @@ def champ_kda(champion):
     c = db_connect()
     c.execute('''SELECT AVG(kills), AVG(deaths), AVG(assists) FROM participants 
              WHERE championName=?''', [champion])
-    return c.fetchone()
+    ret = c.fetchone()
+    db_close()
+    return ret
 
 # get average game duration for a champ regardless of role
 def avg_game_duration(champion):
     c = db_connect()
     c.execute('''SELECT AVG(timePlayed) FROM participants 
              WHERE championName=?''', [champion])
-    return c.fetchone()[0]
+    ret = c.fetchone()[0]
+    db_close()
+    return ret
 
 
 #insert general champion data into database
@@ -351,8 +378,14 @@ def get_match_participant_data(matchId):
     # final output {blueTop: {}, blueJungle: {}, blueBot: {} ...}
     return filtered_data
             
-    
-    
+# get champion data for specific champion
+def get_champ_data(champion):
+    c = db_connect()
+    c.execute('SELECT * FROM champions WHERE championName = ?;', [champion])
+    data = c.fetchone()
+    db_close()
+    return data
+
 # get match info for specifc match
 def get_match_data(matchId):
     c = db_connect()
@@ -396,6 +429,7 @@ def get_spell_images():
     else:
         return None
 
+# get all champ names. Use after db is created.
 def get_champ_names_fast():
     c = db_connect()
     c.execute('SELECT DISTINCT championName FROM champions;')

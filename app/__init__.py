@@ -40,6 +40,6 @@ if __name__ == '__main__':
         db.insert_match_data()
         db.insert_champ_data()
         #db.insert_champ_data_by_roles()
-        print(db.print_sqlite_table('champions'))
+        #print(db.print_sqlite_table('champions'))
     app.debug = True
     app.run(host='0.0.0.0')
