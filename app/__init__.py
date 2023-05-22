@@ -8,6 +8,10 @@ app = Flask(__name__)
 def index():
     return render_template('index.html',champ_names = sorted(db.get_champ_names_fast()))
 
+@app.route('/champ/<champ_name>', methods=['GET', 'POST'])
+def champ(champ_name):
+    return render_template('champ.html', champ_name=champ_name, champ_data=db.get_champ_data(champ_name))
+
 @app.route('/random', methods=['POST'])
 def random():
     id = db.get_random_id()[0]
