@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Walmart OPGG | Random Match</title>
     <link rel="stylesheet" href={{url_for('static', filename='css/style.css')}}>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="top-section">
@@ -85,15 +85,21 @@
                     {% endfor %}
                 </div>
             </div>
-
-            <svg id="chart">
-
-            </svg>
+            <div class="kda-chart-box">
+                <canvas class="kill chart"></canvas>
+                <svg class="death chart"></svg>
+                <svg class="assist chart"></svg>
+            </div>
         </div>
         {% endfor %}
     {% endfor %}
     </div>
-
+    <script>
+        function convertVar(e) {
+            return e;
+        }
+        const positions = convertVar({{positions|tojson}});
+    </script>
     <script src={{url_for('static', filename='js/match.js')}}></script>
 </body>
 </html>

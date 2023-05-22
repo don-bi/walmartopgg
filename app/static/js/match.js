@@ -55,119 +55,54 @@ items.forEach(item => {
     });
 });
 
-// Data for the line graph
-const dataset = [
-    { duration: 0, kills: 0 },
-    { duration: 10, kills: 3 },
-    { duration: 20, kills: 5 },
-    { duration: 30, kills: 9 },
-    { duration: 40, kills: 6 },
-    { duration: 50, kills: 8 },
-    { duration: 60, kills: 12 },
-    // Add more data points as needed
-  ];
-  
- 
-function makeGraph(data, element, xaxis, yaxis) {
-    const margin = { top: 20, right: 20, bottom: 50, left: 50 };
-    const width = 500 - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom;
-    const xName = Object.keys(data[0])[0];
-    const yName = Object.keys(data[0])[1];
-
-    // Create SVG element
-    const svg = d3.select(element)
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-    // Define x and y scales
-    const x = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d[xName])])
-        .range([0, width]);
-
-    const y = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d[yName])])
-        .range([height, 0]);
-
-    // Create area gradient
-    const gradient = svg.append("defs").append("linearGradient")
-        .attr("id", "area-gradient")
-        .attr("x1", 0)
-        .attr("y1", 0)
-        .attr("x2", 0)
-        .attr("y2", "100%");
-
-    gradient.append("stop")
-        .attr("offset", "0%")
-        .style("stop-color", "lightsteelblue")
-        .style("stop-opacity", 1);
-
-    gradient.append("stop")
-        .attr("offset", "100%")
-        .style("stop-color", "lightsteelblue")
-        .style("stop-opacity", 0.2);
-
-    // Create area under the line
-    const area = d3.area()
-        .x(d => x(d[xName]))
-        .y0(y(0))
-        .y1(d => y(d[yName]));
-
-    svg.append("path")
-        .datum(data)
-        .attr("fill", "url(#area-gradient)")
-        .attr("d", area);
-
-    // Create line
-    const line = d3.line()
-        .x(d => x(d[xName]))
-        .y(d => y(d[yName]));
-
-    svg.append("path")
-        .datum(data)
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 2)
-        .attr("d", line);
-
-    // Add x-axis
-    svg.append("g")
-        .attr("transform", `translate(0, ${height})`)
-        .call(d3.axisBottom(x));
-
-    // Add y-axis
-    svg.append("g")
-        .call(d3.axisLeft(y));
-
-    // Add x-axis label
-    svg.append("text")
-        .attr("class", "x-axis-label")
-        .attr("text-anchor", "end")
-        .attr("x", width/2 + 50)
-        .attr("y", height + margin.bottom/2 + 10) // Adjust the y position
-        .text(xaxis);
-
-    // Add y-axis label
-    svg.append("text")
-        .attr("class", "y-axis-label")
-        .attr("text-anchor", "end")
-        .attr("x", -margin.left - 40)
-        .attr("y", -margin.top - 20)
-        .attr("dy", "0.75em")
-        .attr("transform", "rotate(-90)")
-        .text(yaxis);
-
-    // Add emphasized point
-    const emphasizedPoint = { [xName]: 20, [yName]: 10 }; // Example emphasized data point
-
-    svg.append("circle")
-        .attr("class", "emphasized-point")
-        .attr("cx", x(emphasizedPoint[xName]))
-        .attr("cy", y(emphasizedPoint[yName]))
-        .attr("r", 6)
-        .attr("fill", "red");
+// Sample data
+const gameDuration = Array.from({length: 60}, (x, i) => i);;
+var kills = [];
+for (var i = 0; i < 60; i++) {
+    kills.push(Math.floor(Math.random() * 15));
 }
+gameDuration.push(40);
+kills.push(12);
 
-makeGraph(dataset, "#chart", "Game Duration (min)", "Kills");
+// Define the data points
+const data = {
+  labels: ['0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100','0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100'],
+  datasets: [{
+    label: 'Kills',
+    data: [0, 2, 5, 8, 12, 15, 18, 20, 23, 25, 28, 4, 7, 12, 5, 3, 18, 14, 13, 19, 21, 34],
+    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 1
+  }]
+};
+
+// Define the chart options
+const options = {
+  scales: {
+    xAxes: [{
+      scaleLabel: {
+        display: true,
+        labelString: 'Game Duration'
+      }
+    }],
+    yAxes: [{
+      scaleLabel: {
+        display: true,
+        labelString: 'Kills'
+      }
+    }]
+  },
+  plugins: {
+    regression: {
+      type: 'loess'
+    }
+  }
+};
+
+// Create the chart object
+const ctx = document.querySelector('.kill.chart').getContext('2d');
+const myChart = new Chart(ctx, {
+  type: 'scatter',
+  data: data,
+  options: options
+});
