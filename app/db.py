@@ -272,9 +272,10 @@ def insert_champ_data():
         runes = most_common_runes(champ)
         kda = champ_kda(champ)
         game_duration = avg_game_duration(champ)
+        cs, dmgtaken, dmgdealt = get_cs(champ), avg_dmgtaken(champ), avg_dmgdealt(champ)
         c = db_connect()
         query = "INSERT INTO champions VALUES (" + '?,' * 18 + '?)'
-        c.execute(query, (champ, 'ALL', winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, get_cs(champ), avg_dmgtaken(champ), avg_dmgdealt(champ), runes))
+        c.execute(query, (champ, 'ALL', winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, cs, dmgtaken, dmgdealt, runes))
         db_close()
     
 
@@ -289,9 +290,7 @@ def insert_champ_data_by_roles():
             runes = most_common_runes_specific(champ, role)
             kda = champ_kda_specific(champ, role)
             game_duration = avg_game_duration_specific(champ, role)
-            cs = get_cs_specific(champ, role)
-            dmgtaken = avg_dmgtaken_specific(champ, role)
-            dmgdealt = avg_dmgdealt_specific(champ, role)
+            cs, dmgtaken, dmgdealt = get_cs_specific(champ, role), avg_dmgtaken_specific(champ, role), avg_dmgdealt_specific(champ, role)
             c = db_connect()
             query = "INSERT INTO champions VALUES (" + '?,' * 18 + '?)'
             c.execute(query, (champ, role, winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, cs, dmgtaken, dmgdealt, runes))
