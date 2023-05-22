@@ -55,7 +55,7 @@ def make_database():
                turretsLost INT,unrealKills INT,visionClearedPings INT,visionScore INT,visionWardsBoughtInGame INT,wardsKilled INT,wardsPlaced INT,win INT)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS champions(championName TEXT, role TEXT, winRate INT, kills INT, deaths INT, assists INT, commonSpell1 INT, commonSpell2 INT,
-    item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT, gameDuration INT, runes BLOB)''')
+    item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT, gameDuration INT, cs INT, dmgTaken INT, dmgDealt INT, wardsPlaced INT, runes BLOB)''')
     db.commit()
     c.close()
 
@@ -155,6 +155,44 @@ def avg_game_duration_specific(champion, role):
              WHERE championName=? AND individualPosition=?''', (champion, role))
     return c.fetchone()[0]
 
+#calculate cs for a champ by role
+def get_cs_specific(champion, role):
+    c = db_connect()
+    c.execute('''SELECT SUM(totalMinionsKilled) FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    minionsKilled = c.fetchone()[0]
+
+    c.execute('''SELECT SUM(timePlayed) FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    time = c.fetchone()[0]
+    return minionsKilled / time
+
+# get avg dmgtaken for a champ disregarding role
+def avg_dmgtaken(champion):
+    c.execute('''SELECT AVG(totalDamageTaken) FROM participants 
+             WHERE championName=?''', (champion))
+    return c.fetchone()[0]
+
+
+# get avg dmgtaken for a champ by role
+def avg_dmgtaken_specific(champion, role):
+    c.execute('''SELECT AVG(totalDamageTaken) FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    return c.fetchone()[0]
+
+
+#calculate cs for a champ disregarding role
+def get_cs(champion):
+    c = db_connect()
+    c.execute('''SELECT SUM(totalMinionsKilled) FROM participants 
+             WHERE championName=?''', (champion))
+    minionsKilled = c.fetchone()[0]
+
+    c.execute('''SELECT SUM(timePlayed) FROM participants 
+             WHERE championName=?''', (champion))
+    time = c.fetchone()[0]
+    return minionsKilled / time
+
 # get winrate for a champ regardless of role
 def champ_wr(champion):
     c = db_connect()
@@ -206,6 +244,10 @@ def avg_game_duration(champion):
              WHERE championName=?''', [champion])
     return c.fetchone()[0]
 
+
+
+
+
 #insert general champion data into database
 def insert_champ_data():
     lst = get_champ_names()
@@ -216,7 +258,7 @@ def insert_champ_data():
         runes = most_common_runes(champ)
         kda = champ_kda(champ)
         game_duration = avg_game_duration(champ)
-        query = "INSERT INTO champions VALUES (" + '?,' * 15 + '?)'
+        query = "INSERT INTO champions VALUES (" + '?,' * 16 + '?)'
         c = db_connect()
         c.execute(query, (champ, 'ALL', winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, runes))
         db_close()
@@ -234,8 +276,8 @@ def insert_champ_data_by_roles():
             kda = champ_kda_specific(champ, role)
             game_duration = avg_game_duration_specific(champ, role)
             c = db_connect()
-            query = "INSERT INTO champions VALUES (" + '?,' * 15 + '?)'
-            c.execute(query, (champ, role, winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, runes))
+            query = "INSERT INTO champions VALUES (" + '?,' * 16 + '?)'
+            c.execute(query, (champ, role, winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, cs, runes))
             db_close()
 # print(print_sqlite_table('participants'))
 
