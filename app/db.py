@@ -1,6 +1,8 @@
 import sqlite3
-import random, os, json, time, pprint as pp
+import random, os, ujson as json, time, pprint as pp
 from collections import Counter
+import requests
+
 global DB_FILE
 current_dir = os.path.dirname(__file__)
 DB_FILE = os.path.join(current_dir, 'database.db')
@@ -76,7 +78,7 @@ def insert_participant_data():
                     value_list.append(data_value)
             query = "INSERT INTO participants VALUES (" + '?,' * 123 + '?)'
             c.execute(query,[str(matchId)] + value_list)
-            
+        print(matchId)
     db_close()
 
 def insert_match_data():
@@ -299,6 +301,41 @@ def get_match_data(matchId):
     data = c.fetchall()[0]
     db_close()
     return data
+
+def convert_item_id(item_id):
+    # Make a request to the Data Dragon to get the item data
+    url = 'http://ddragon.leagueoflegends.com/cdn/13.9.1/data/en_US/item.json'
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        data = response.json()
+        item_data = data['data']
+        if str(item_id) in item_data:
+            item_info = item_data[str(item_id)]
+            item_name = item_info['name']
+            image_link = f"http://ddragon.leagueoflegends.com/cdn/13.9.1/img/item/{item_id}.png"
+            return (item_name, image_link)
+        else:
+            return None, None
+    else:
+        return None, None
+
+def get_spell_images():
+    # Make a request to the Data Dragon to get the summoner spell data
+    url = 'http://ddragon.leagueoflegends.com/cdn/13.9.1/data/en_US/summoner.json'
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        data = response.json()
+        temp_data = data['data']
+        spell_data = {}
+        for key in temp_data:
+            spell_data[temp_data[key]['key']] = temp_data[key]['image']['full']
+        return spell_data
+    else:
+        return None
 
 # def create_user(username, password):
 #     c = db_connect()

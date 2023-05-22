@@ -22,8 +22,10 @@ def match(match_id):
     positions = [['blueTop', 'blueJungle', 'blueMiddle', 'blueBottom', 'blueSupport'], 
                  ['redTop', 'redJungle', 'redMiddle', 'redBottom', 'redSupport']]
     position_names = ['Top', 'Jungle', 'Middle', 'Bottom', 'Support']
-    return render_template('match.html', match_id=match_id, match_data=match_data,
-     participant_data=participant_data, positions=positions, position_names=position_names)
+    return render_template('match.html',str=str, match_id=match_id, match_data=match_data,
+     participant_data=participant_data, positions=positions, position_names=position_names,
+     convert_item_id = db.convert_item_id, spell_data = db.get_spell_images(),
+     champ_kda_specifics = db.champ_kda_specific)
 
 
 if __name__ == '__main__':
@@ -34,6 +36,6 @@ if __name__ == '__main__':
         db.insert_participant_data()
         db.insert_match_data()
         db.insert_champ_data()
-        db.insert_champ_data_by_roles()
+        # db.insert_champ_data_by_roles()
     app.debug = True
     app.run(host='0.0.0.0')

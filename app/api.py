@@ -6,7 +6,7 @@ import os
 import time
 
 global token
-token = "RGAPI-aa7be6ad-ab76-4479-b84a-65dc2b81f792"
+token = "RGAPI-e000e0a7-a5c6-4d3e-b4f4-26c6f98ac4d0"
 
 def create_summoner_ids():
     league_list = ['challenger','grandmaster','master']
@@ -86,4 +86,4 @@ def make_match_data(start_index):
         f.close()
         time.sleep(1.3)
 
-make_match_data(0)
+make_match_data(300)

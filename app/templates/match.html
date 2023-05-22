@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Walmart OPGG | Random Match</title>
     <link rel="stylesheet" href={{url_for('static', filename='css/style.css')}}>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
     <div class="top-section">
@@ -23,7 +24,9 @@
             </div>
             {% endfor %}
         </div>
-        <img class="summoners-rift-map" src="https://map.riftkit.net/img/rift/normal.jpg" alt="summoner's rift">
+        <div class="no-side">
+            <img class="summoners-rift-map" src="https://map.riftkit.net/img/rift/normal.jpg" alt="summoner's rift">
+        </div>
         <div class="red side">
             {% for red_position_index in range(5) %}
             {% set red_position = positions[1][red_position_index] %}
@@ -40,24 +43,52 @@
         </div>  
     </div>
 
-    <div class="overall-section">
-
-    </div>
-
     <div class="player-section">
     {% for i in range(2) %}
         {% for position in positions[i] %}
+        {% set current_participant_data = participant_data[position] %}
         <div class="player-data {{position}}">
-            <div class="icon">
-                <div class="champion-name">{{participant_data[position]['championName']}}</div>
-                <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[position]['championName']}}_0.jpg" alt="">
-                <div class="data username">{{participant_data[position]['summonerName']}}</div>
+            <div class="player-top">
+                <div class="icon">
+                    <div class="champion-name">{{current_participant_data['championName']}}</div>
+                    <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[position]['championName']}}_0.jpg" alt="">
+                    <div class="data username">{{current_participant_data['summonerName']}}</div>
+                </div>
+                <div class="kda-box">
+                    <div class="kda kills">{{current_participant_data['kills']}} kills</div>
+                    <div class="kda deaths">{{current_participant_data['deaths']}} deaths</div>
+                    <div class="kda assists">{{current_participant_data['assists']}} assists</div>
+                </div>
             </div>
-            <div class="kda-box">
-                <div class="kda kills">{{participant_data[position]['kills']}} kills</div>
-                <div class="kda deaths">{{participant_data[position]['deaths']}} deaths</div>
-                <div class="kda assists">{{participant_data[position]['assists']}} assists</div>
+
+            <div class="usage-box">
+                <div class="spell-box">
+                    <img src="http://ddragon.leagueoflegends.com/cdn/13.9.1/img/spell/{{spell_data[str(current_participant_data['summoner1Id'])]}}" alt="">
+                    <img src="http://ddragon.leagueoflegends.com/cdn/13.9.1/img/spell/{{spell_data[str(current_participant_data['summoner2Id'])]}}" alt="">
+                </div>
+
+                <div class="item-box">
+                    {% for item_index in range(7) %}
+                    {% set item = 'item' + item_index|string %}
+                    {% if current_participant_data[item] != 0 %}
+                    <div class="item">
+                        <img src="{{convert_item_id(current_participant_data[item])[1]}}" alt="">
+                        <div class="item-name">{{convert_item_id(current_participant_data[item])[0]}}</div>
+                    </div>
+                    {% else %}
+                    <div class="item">
+                        <img src="https://previews.123rf.com/images/greek/greek1603/greek160300025/54933102-square-transparent-background.jpg" alt="">
+                        <div class="item-name">Empty</div>
+                    </div>
+                    {% endif %}
+
+                    {% endfor %}
+                </div>
             </div>
+
+            <svg id="chart">
+
+            </svg>
         </div>
         {% endfor %}
     {% endfor %}
