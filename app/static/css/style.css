@@ -98,6 +98,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 3px;
+    width: 6vw;
 }
 
 .position-name {
@@ -245,7 +246,7 @@ body {
 .item-name {
     position: absolute;
     display: none;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     border: 1px solid #ccc;
     padding: 10px;
 }
