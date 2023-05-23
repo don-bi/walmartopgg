@@ -8,27 +8,33 @@ app = Flask(__name__)
 def index():
     return render_template('index.html',champ_names = sorted(db.get_champ_names_fast()))
 
-@app.route('/champ/<champ_name>', methods=['GET', 'POST'])
+@app.route('/champ/<champ_name>/', methods=['GET', 'POST'])
 def champ(champ_name):
-    return render_template('champ.html', champ_name=champ_name, champ_data=db.get_champ_data(champ_name))
+    return render_template('champ.html', champ_name=champ_name, 
+                           champ_data=db.get_champ_data(champ_name), 
+                           champ_text = db.get_champion_text(champ_name),
+                           champ_image = db.get_champion_image(champ_name, 10))
 
-@app.route('/random', methods=['POST'])
+@app.route('/random/', methods=['POST'])
 def random():
     id = db.get_random_id()[0]
     print(id)
     return redirect('/match/' + str(id))
     
 
-@app.route('/match/<match_id>', methods=['GET'])
+@app.route('/match/<match_id>/', methods=['GET'])
 def match(match_id):
     match_data = db.get_match_data(match_id)
     participant_data = db.get_match_participant_data(match_id)
     positions = [['blueTop', 'blueJungle', 'blueMiddle', 'blueBottom', 'blueSupport'], 
                  ['redTop', 'redJungle', 'redMiddle', 'redBottom', 'redSupport']]
+
+    champ_data = [[db.get_champ_data(participant_data[position]['championName']) for position in positions[0]]
+                 ,[db.get_champ_data(participant_data[position]['championName']) for position in positions[1]]]
     position_names = ['Top', 'Jungle', 'Middle', 'Bottom', 'Support']
     return render_template('match.html',str=str, match_id=match_id, match_data=match_data,
      participant_data=participant_data, positions=positions, position_names=position_names,
-     convert_item_id = db.convert_item_id, spell_data = db.get_spell_images())
+     convert_item_id = db.convert_item_id, spell_data = db.get_spell_images(), champ_data = champ_data)
 
 
 if __name__ == '__main__':
@@ -40,6 +46,6 @@ if __name__ == '__main__':
         db.insert_match_data()
         db.insert_champ_data()
         #db.insert_champ_data_by_roles()
-        print(db.print_sqlite_table('champions'))
+        #print(db.print_sqlite_table('champions'))
     app.debug = True
     app.run(host='0.0.0.0')

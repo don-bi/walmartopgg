@@ -9,10 +9,11 @@ function showSearch() {
     var count = 0;
     champBox.style.display = 'none';
     champ_names.forEach(name => {
+        if (name == "MonkeyKing") name = "Wukong"; 
         const champ = document.querySelector(`.${name}`);
         champ.style.display = 'none';
         if (current != ""){
-            if (name.toLowerCase().includes(current)) {
+            if (name.toLowerCase().includes(current.toLowerCase())) {
                 champBox.style.display = 'block';
                 champ.style.display = 'block';
                 count ++;

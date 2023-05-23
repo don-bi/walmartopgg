@@ -14,7 +14,11 @@
     <input type="text" class="form-control" placeholder="Search">
     <form class="champ-names">
       {% for name in champ_names %}
+      {% if name == 'MonkeyKing' %}
+        <button formaction="/champ/{{name}}" class="champ-name Wukong">Wukong</button>
+      {% else %}
         <button formaction="/champ/{{name}}" class="champ-name {{name}}">{{name}}</button>
+      {% endif %}
       {% endfor %}
     </form>
   </div>
