@@ -286,7 +286,7 @@ background: #50cbf4;
 
 .item-box {
     display: flex;
-    gap: 1vw
+    gap: 1vw;
 }
 
 .spell-box {
@@ -300,6 +300,7 @@ background: #50cbf4;
     border-radius: 10px;
     box-shadow: 1px 1px 10px -4px;
     transition: 0.2s;
+    background-color: black;
 }
 
 .item-name {
