@@ -61,6 +61,7 @@ def make_database():
 
 
 def insert_participant_data():
+    print("inserting participant data...")
     c = db_connect()
     data_keys = get_participant_data_names() #list of all data keys
     
@@ -78,15 +79,19 @@ def insert_participant_data():
                     value_list.append(data_value)
             query = "INSERT INTO participants VALUES (" + '?,' * 123 + '?)'
             c.execute(query,[str(matchId)] + value_list)
+    print("finished inserting participant data...")
+
         #print(matchId)
     db_close()
 
 def insert_match_data():
+    print("inserting match data...")
     c = db_connect()
     for matchId in parsed_data:
         match_data = parsed_data[matchId]['info']
         query = "INSERT INTO matches VALUES (" + '?,' * 14 + '?)'
         c.execute(query, [str(matchId), match_data['gameDuration'], match_data['teams'][0]['win'], match_data['teams'][0]['objectives']['champion']['kills'], match_data['teams'][0]['objectives']['baron']['kills'], match_data['teams'][0]['objectives']['dragon']['kills'], match_data['teams'][0]['objectives']['inhibitor']['kills'], match_data['teams'][0]['objectives']['riftHerald']['kills'], match_data['teams'][0]['objectives']['tower']['kills'], match_data['teams'][1]['objectives']['champion']['kills'], match_data['teams'][1]['objectives']['baron']['kills'], match_data['teams'][1]['objectives']['dragon']['kills'], match_data['teams'][1]['objectives']['inhibitor']['kills'], match_data['teams'][1]['objectives']['riftHerald']['kills'], match_data['teams'][1]['objectives']['tower']['kills']])
+    print("finished inserting match data...")
     db_close()
     
 
@@ -291,8 +296,10 @@ def avg_game_duration(champion):
 
 #insert general champion data into database
 def insert_champ_data():
+    print("inserting champ data...")
     lst = get_champ_names()
     for champ in lst:
+        print(champ)
         items = most_common_items(champ)
         winrate = champ_wr(champ)
         spells = most_common_spells(champ)
@@ -304,6 +311,8 @@ def insert_champ_data():
         query = "INSERT INTO champions VALUES (" + '?,' * 18 + '?)'
         c.execute(query, (champ, 'ALL', winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, cs, dmgtaken, dmgdealt, runes))
         db_close()
+    print("finished inserting champ data...")
+    
     
 
 #insert champion data into database

@@ -77,9 +77,28 @@ function createBarGraph(playerStat, avgStat, element, stat, champion) {
         data: data,
         options: {
             responsive: true,
+            legend: {
+                labels: {
+                    color: "white"
+                }
+            },
             scales: {
             y: {
+                ticks: {
+                    color: "#bebebe",
+                },
+                grid: {
+                    display: false
+                },
                 beginAtZero: true
+            },
+            x: {
+                ticks: {
+                    color: "#bebebe",
+                },
+                grid: {
+                    display: false
+                },
             }
             }
         },
