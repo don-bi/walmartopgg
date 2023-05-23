@@ -311,10 +311,16 @@ background: #50cbf4;
     padding: 10px;
 }
 
-.chart-wrapper {
-    width: 20vw;
-    height: 100%;
+.kda-chart-box {
+    display: flex;
+    justify-content: space-between;
 }
+
+.chart-wrapper {
+    width: 30vw;
+    height: auto;
+}
+
 
 /* champ page time */
 .champ-splash {

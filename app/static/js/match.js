@@ -57,16 +57,16 @@ items.forEach(item => {
 
 function createBarGraph(playerStat, avgStat, element, stat, champion) {
     const data = {
-        labels: [`Player's ${stat}` , `Average ${champion}'s ${stat}`],
+        labels: [`Player's ${stat}` , `Average ${champion} ${stat}`],
         datasets: [{
             label: `${stat}`,
             data: [playerStat, avgStat],
             backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
+            'rgba(153, 221, 255, 0.2)',
             'rgba(255, 159, 64, 0.2)',
             ],
             borderColor: [
-            'rgb(255, 99, 132)',
+            'rgb(153, 221, 255)',
             'rgb(255, 159, 64)',
             ],
             borderWidth: 1
@@ -94,4 +94,6 @@ positions[0].concat(positions[1]).forEach(pos => {
     const champDeaths = champStats['deaths'];
     const champAssists = champStats['assists'];
     createBarGraph(playerStats['kills'], champKills, document.querySelector(`.player-data.${pos} .kill.chart`), 'Kills', championName);
+    createBarGraph(playerStats['deaths'], champDeaths, document.querySelector(`.player-data.${pos} .death.chart`), 'Deaths', championName);
+    createBarGraph(playerStats['assists'], champAssists, document.querySelector(`.player-data.${pos} .assist.chart`), 'Assists', championName);
 });
