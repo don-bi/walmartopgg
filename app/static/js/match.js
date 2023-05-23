@@ -55,6 +55,3 @@ items.forEach(item => {
     });
 });
 
-
-const labels = [player_data['summonerName'], 'Average ' + player_data['championName']];
-console.log(labels);

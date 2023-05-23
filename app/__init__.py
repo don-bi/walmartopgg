@@ -31,11 +31,10 @@ def match(match_id):
 
     champ_data = [[db.get_champ_data(participant_data[position]['championName']) for position in positions[0]]
                  ,[db.get_champ_data(participant_data[position]['championName']) for position in positions[1]]]
-    print(champ_data)
     position_names = ['Top', 'Jungle', 'Middle', 'Bottom', 'Support']
     return render_template('match.html',str=str, match_id=match_id, match_data=match_data,
      participant_data=participant_data, positions=positions, position_names=position_names,
-     convert_item_id = db.convert_item_id, spell_data = db.get_spell_images())
+     convert_item_id = db.convert_item_id, spell_data = db.get_spell_images(), champ_data = champ_data)
 
 
 if __name__ == '__main__':

@@ -63,7 +63,6 @@
                     {% endif %}
                     <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[position]['championName']}}_0.jpg" alt="">
                     <div class="data username">{{current_participant_data['summonerName']}}</div>
-                    
                 </div>
                 <div class="kda-box">
                     <div class="kda kills">{{current_participant_data['kills']}} kills</div>
@@ -99,6 +98,11 @@
             <div class="kda-chart-box">
                 <canvas class="kill chart"></canvas>
                 <svg class="death chart"></svg>
+                <script>
+                    var player_data = {{current_participant_data|safe}};
+                    var avg_data = {{champ_data|safe}};
+                    createBarGraph(player_data, avg_data);
+                </script>
                 <svg class="assist chart"></svg>
             </div>
         </div>
