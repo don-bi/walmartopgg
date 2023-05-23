@@ -8,21 +8,21 @@
   <link rel="stylesheet" href={{url_for('static', filename='css/style.css')}}>
 </head>
 
-<body class="align-items-center"> 
-  <form class="recall">
-    <button formaction="/">
+<body class="align-items-center" style="background-image: url({{champ_image}}); background-repeat: no-repeat; background-size: cover;"> 
+  <form class="recall" style="margin-top: 20px; margin-left: 20px; width: 100%; position: relative;">
+    <button formaction="/" style="cursor: pointer;">
       <img src="https://static.wikia.nocookie.net/leagueoflegends/images/4/43/Recall.png/" alt="recall">
     </button>
   </form>
 
-  <img class="champ-splash" src="{{champ_image}}" style="background-size: cover;">
-    <img class="" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{champ_name}}_0.jpg" style=" border: 2px solid rgb(188, 188, 188); border-radius: 100%;">
+  <div class="info" style="position: relative; margin-top: 2%; margin-left: 20px; background-color: white; overflow: auto; opacity: 0.75;">
+    <img class="" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{champ_name}}_0.jpg" style=" border: 2px solid rgb(188, 188, 188); border-radius: 100%; float: left;">
     {% if champ_name == 'MonkeyKing' %}
-    <div class="full-name">Wukong, {{champ_text[0]}}</div>
+    <div class="full-name" style="text-align: center; float: left;">Wukong, {{champ_text[0]}}</div>
     {% else %}
-    <div class="full-name">{{champ_name}}, {{champ_text[0]}}</div>
+    <div class="full-name" style="text-align: center; float: left;">{{champ_name}}, {{champ_text[0]}}</div>
     {% endif %}
-  </img>
+  </div>
   
   
   <script src={{url_for('static', filename='js/champ.js')}}></script>
