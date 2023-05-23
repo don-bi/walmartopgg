@@ -31,8 +31,52 @@ Yat Long -- 2023-05-04 13:41
 create flask app with js linked html page
 ==============================================================
 
+Group -- 2023-05-10 13:00
+--------------------------------------------------------------
+added launch codes and other misc stuff
+==============================================================
+
+Group -- 2023-05-15 13:00
+--------------------------------------------------------------
+app added to DigiO
+==============================================================
+
+Davud Deng -- 2023-05-19
+--------------------------------------------------------------
+Tour Learnination
+- Google charts helps with displaying graphs/charts of data
+  - Also includes hover text
+- Python's json library allows for nice manipulation of
+  data (demonstrated by goobergang)
+- Some teams are using search bars with autocomplete and
+  have a similar implementation to our idea
+==============================================================
+
+Yat Long -- 2023-05-19 17:45
+--------------------------------------------------------------
+Added data interpretation to get champ items and spells
+==============================================================
 
 Yat Long -- 2023-05-20 10:15
 --------------------------------------------------------------
 finshed calculating and inserting champion data into database
+==============================================================
+
+Donald -- 2023-05-20 19:30
+--------------------------------------------------------------
+Created champion page template
+Continued to add game data onto match page
+==============================================================
+
+Jacob -- 2023-05-22 13:15
+--------------------------------------------------------------
+CSS changes and etc
+inspiring my teammates with my gracious ideas
+==============================================================
+
+Group -- 2023-05-22 22:15
+--------------------------------------------------------------
+Added filtered and collapsing search bar on main page
+Added skins to the background of the champion pages
+Added navigation between pages
 ==============================================================
