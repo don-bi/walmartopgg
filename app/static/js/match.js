@@ -55,3 +55,43 @@ items.forEach(item => {
     });
 });
 
+function createBarGraph(playerStat, avgStat, element, stat, champion) {
+    const data = {
+        labels: [`Player's ${stat}` , `Average ${champion}'s ${stat}`],
+        datasets: [{
+            label: `${stat}`,
+            data: [playerStat, avgStat],
+            backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            ],
+            borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            ],
+            borderWidth: 1
+        }]
+    }
+    const charterMaker = new Chart(element ,{
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            }
+        },
+    });
+}
+
+positions[0].concat(positions[1]).forEach(pos => {
+    const playerStats = participant_data[pos];
+    const championName = playerStats['championName'];
+    const champStats = champ_data[championName];
+    const champKills = champStats['kills'];
+    const champDeaths = champStats['deaths'];
+    const champAssists = champStats['assists'];
+    createBarGraph(playerStats['kills'], champKills, document.querySelector(`.player-data.${pos} .kill.chart`), 'Kills', championName);
+});

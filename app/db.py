@@ -378,6 +378,20 @@ def get_match_participant_data(matchId):
     # final output {blueTop: {}, blueJungle: {}, blueBot: {} ...}
     return filtered_data
 
+def get_total_champ_data():
+    c = db_connect()
+    db = sqlite3.connect(DB_FILE)
+    db.row_factory = sqlite3.Row
+    c = db.cursor()
+    c.execute('SELECT * FROM champions;')
+    data = c.fetchall()
+    db_close()
+    data = list(map(lambda item:dict(item),data)) #data without team and roles as keys
+    final_data = {}
+    for d in data:
+        final_data[d['championName']] = d
+    return final_data
+
 #get specific champion data for specific role
 def get_champ_data_by_role(champion, role):
     c = db_connect()

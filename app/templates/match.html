@@ -96,14 +96,15 @@
                 </div>
             </div>
             <div class="kda-chart-box">
-                <canvas class="kill chart"></canvas>
-                <svg class="death chart"></svg>
-                <script>
-                    var player_data = {{current_participant_data|safe}};
-                    var avg_data = {{champ_data|safe}};
-                    createBarGraph(player_data, avg_data);
-                </script>
-                <svg class="assist chart"></svg>
+                <div class="chart-wrapper">
+                    <canvas class="kill chart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas class="death chart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas class="assist chart"></canvas>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -114,6 +115,9 @@
             return e;
         }
         const positions = convertVar({{positions|tojson}});
+        const participant_data = convertVar({{participant_data|tojson}});
+        const champ_data = convertVar({{champ_data|safe}});
+        console.log(champ_data)
     </script>
     <script src={{url_for('static', filename='js/match.js')}}></script>
 </body>

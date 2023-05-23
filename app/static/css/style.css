@@ -310,6 +310,11 @@ background: #50cbf4;
     padding: 10px;
 }
 
+.chart-wrapper {
+    width: 20vw;
+    height: 100%;
+}
+
 /* champ page time */
 .champ-splash {
     width: 100vw;
