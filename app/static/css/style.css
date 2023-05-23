@@ -12,6 +12,21 @@ body {
     margin: 0;
 }
 
+.recall {
+    position: absolute;
+    margin: 0 auto;
+}
+
+.recall button {
+    border: none;
+    background: none;
+}
+
+.recall button img {
+    border-radius: 100%;
+    width: 5vw;
+}
+
 .champ-names {
     display: none;
     background-color: gray;
@@ -293,4 +308,12 @@ background: #50cbf4;
     background-color: #ffffff;
     border: 1px solid #ccc;
     padding: 10px;
+}
+
+/* champ page time */
+.champ-splash {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0,0,0,0.5));
+    object-fit: cover;
 }

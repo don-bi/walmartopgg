@@ -9,6 +9,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <form class="recall">
+        <button formaction="/">
+            <img src="https://static.wikia.nocookie.net/leagueoflegends/images/4/43/Recall.png/" alt="recall">
+        </button>
+    </form>
+
     <div class="top-section">
         <div class="blue side">
             {% for blue_position_index in range(5) %}
@@ -50,7 +56,11 @@
         <div class="player-data {{position}}">
             <div class="player-top">
                 <div class="icon">
+                    {% if current_participant_data['championName'] == 'MonkeyKing' %}
+                    <div class="champion-name">Wukong</div>
+                    {% else %}
                     <div class="champion-name">{{current_participant_data['championName']}}</div>
+                    {% endif %}
                     <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[position]['championName']}}_0.jpg" alt="">
                     <div class="data username">{{current_participant_data['summonerName']}}</div>
                 </div>

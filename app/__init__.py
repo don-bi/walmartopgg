@@ -8,18 +8,21 @@ app = Flask(__name__)
 def index():
     return render_template('index.html',champ_names = sorted(db.get_champ_names_fast()))
 
-@app.route('/champ/<champ_name>', methods=['GET', 'POST'])
+@app.route('/champ/<champ_name>/', methods=['GET', 'POST'])
 def champ(champ_name):
-    return render_template('champ.html', champ_name=champ_name, champ_data=db.get_champ_data(champ_name))
+    return render_template('champ.html', champ_name=champ_name, 
+                           champ_data=db.get_champ_data(champ_name), 
+                           champ_text = db.get_champion_text(champ_name),
+                           champ_image = db.get_champion_image(champ_name, 10))
 
-@app.route('/random', methods=['POST'])
+@app.route('/random/', methods=['POST'])
 def random():
     id = db.get_random_id()[0]
     print(id)
     return redirect('/match/' + str(id))
     
 
-@app.route('/match/<match_id>', methods=['GET'])
+@app.route('/match/<match_id>/', methods=['GET'])
 def match(match_id):
     match_data = db.get_match_data(match_id)
     participant_data = db.get_match_participant_data(match_id)

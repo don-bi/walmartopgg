@@ -78,7 +78,7 @@ def insert_participant_data():
                     value_list.append(data_value)
             query = "INSERT INTO participants VALUES (" + '?,' * 123 + '?)'
             c.execute(query,[str(matchId)] + value_list)
-        print(matchId)
+        #print(matchId)
     db_close()
 
 def insert_match_data():
@@ -377,11 +377,19 @@ def get_match_participant_data(matchId):
         
     # final output {blueTop: {}, blueJungle: {}, blueBot: {} ...}
     return filtered_data
-            
-# get champion data for specific champion
+
+#get specific champion data for specific role
+def get_champ_data_by_role(champion, role):
+    c = db_connect()
+    c.execute('SELECT * FROM champions WHERE championName = ? AND role=?;', [champion, role])
+    data = c.fetchone()
+    db_close()
+    return data
+
+# get generic champion data for specific champion
 def get_champ_data(champion):
     c = db_connect()
-    c.execute('SELECT * FROM champions WHERE championName = ?;', [champion])
+    c.execute('SELECT * FROM champions WHERE championName = ? AND role="ALL";', [champion])
     data = c.fetchone()
     db_close()
     return data
@@ -428,6 +436,35 @@ def get_spell_images():
         return spell_data
     else:
         return None
+    
+def get_champion_text(champ_name):
+    if champ_name == 'FiddleSticks':
+        champ_name = 'Fiddlesticks'
+    # Make a request to the Data Dragon to get the summoner spell data
+    url = 'http://ddragon.leagueoflegends.com/cdn/13.9.1/data/en_US/champion.json'
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        data = response.json()
+        temp_data = data['data']
+        return (temp_data[champ_name]['title'], temp_data[champ_name]['blurb'])
+    else:
+        return None
+    
+def get_champion_image(champ_name, range):
+    rand = random.randint(1, range) 
+    if champ_name == 'Fiddlesticks':
+        champ_name = 'FiddleSticks'
+    url = f'https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/centered/{champ_name}_{rand}.jpg'
+    print(url)
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        return url
+    else:
+        return get_champion_image(champ_name, range-1)
 
 # get all champ names. Use after db is created.
 def get_champ_names_fast():
@@ -436,14 +473,7 @@ def get_champ_names_fast():
     data = list(map(''.join, c.fetchall()))
     db_close()
     return data
-
-# def create_user(username, password):
-#     c = db_connect()
-#     c.execute('INSERT INTO users(username, password, Did_Questions) VALUES (?, ?, ?);', (username, password, False))
-#     c.execute('INSERT INTO grassmeter(Quiz_Grass, Grass, Game_Grass) VALUES (?, ?, ?);', (0, 0, 0))
-#     db.commit()
-#     #db_close() Dont know what exactly the problem is but dont uncomment this for signup to work
-
+    
 # make_database()
 # insert_match_data()
 # insert_participant_data()
