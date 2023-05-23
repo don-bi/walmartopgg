@@ -4,14 +4,28 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OP CHAMPS</title>
+  <title>{{champ_name}} INFO</title>
   <link rel="stylesheet" href={{url_for('static', filename='css/style.css')}}>
 </head>
-<body class="align-items-center">
-  <div class="form-group has-search" style="width: 80%; margin: auto; padding-top: 10%;">
 
+<body class="align-items-center" style="background-image: url({{champ_image}}); background-repeat: no-repeat; background-size: cover;"> 
+  <form class="recall" style="margin-top: 20px; margin-left: 20px; width: 100%; position: relative;">
+    <button formaction="/" style="cursor: pointer;">
+      <img src="https://static.wikia.nocookie.net/leagueoflegends/images/4/43/Recall.png/" alt="recall">
+    </button>
+  </form>
 
-  <script src={{url_for('static', filename='js/script.js')}}></script>
-  <script src={{url_for('static', filename='js/wallpaper.js')}}></script>
+  <div class="info" style="position: relative; margin-top: 2%; margin-left: 20px; background-color: white; overflow: auto; opacity: 0.75;">
+    <img class="" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{champ_name}}_0.jpg" style=" border: 2px solid rgb(188, 188, 188); border-radius: 100%; float: left;">
+    {% if champ_name == 'MonkeyKing' %}
+    <div class="full-name" style="text-align: center; float: left;">Wukong, {{champ_text[0]}}</div>
+    {% else %}
+    <div class="full-name" style="text-align: center; float: left;">{{champ_name}}, {{champ_text[0]}}</div>
+    {% endif %}
+  </div>
+  
+  
+  <script src={{url_for('static', filename='js/champ.js')}}></script>
+  <!-- <script src={{url_for('static', filename='js/background.js')}}></script> -->
 </body>
 </html>

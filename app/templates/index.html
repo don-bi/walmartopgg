@@ -12,12 +12,26 @@
   <div class="form-group has-search" style="width: 80%; margin: auto; padding-top: 10%;">
     <span class="fa fa-search form-control-feedback"></span>
     <input type="text" class="form-control" placeholder="Search">
+    <form class="champ-names">
+      {% for name in champ_names %}
+      {% if name == 'MonkeyKing' %}
+        <button formaction="/champ/{{name}}" class="champ-name Wukong">Wukong</button>
+      {% else %}
+        <button formaction="/champ/{{name}}" class="champ-name {{name}}">{{name}}</button>
+      {% endif %}
+      {% endfor %}
+    </form>
   </div>
   <form action="/random" method="post" style="width: 20%; margin: auto;">
     <button type="submit" class="random-match">click here to find a random match!</button>
   </form>
-
-
+  <script>
+    function convertVar(e) {
+        return e;
+    }
+    const champ_names = convertVar({{champ_names | tojson}});
+  </script>
+  <script src={{url_for('static', filename='js/index.js')}}></script>
   <script src={{url_for('static', filename='js/background.js')}}></script>
 </body>
 </html>

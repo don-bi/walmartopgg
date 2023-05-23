@@ -55,7 +55,7 @@ def make_database():
                turretsLost INT,unrealKills INT,visionClearedPings INT,visionScore INT,visionWardsBoughtInGame INT,wardsKilled INT,wardsPlaced INT,win INT)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS champions(championName TEXT, role TEXT, winRate INT, kills INT, deaths INT, assists INT, commonSpell1 INT, commonSpell2 INT,
-    item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT, gameDuration INT, runes BLOB)''')
+    item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT, gameDuration INT, cs INT, dmgTaken INT, dmgDealt INT, runes BLOB)''')
     db.commit()
     c.close()
 
@@ -78,7 +78,7 @@ def insert_participant_data():
                     value_list.append(data_value)
             query = "INSERT INTO participants VALUES (" + '?,' * 123 + '?)'
             c.execute(query,[str(matchId)] + value_list)
-        print(matchId)
+        #print(matchId)
     db_close()
 
 def insert_match_data():
@@ -99,7 +99,7 @@ def print_sqlite_table(table_name):
     db_close()
     return data
 
-# get list of all champ names in db
+# get list of all champ names in db. Use before db table is created.
 def get_champ_names():
     c = db_connect()
     c.execute('SELECT DISTINCT championName FROM participants;')
@@ -113,13 +113,16 @@ def champ_wr_specific(champion, role):
     c.execute('''SELECT AVG(win) FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
     wr = c.fetchone()[0]
+    db_close()
     return wr * 100 if wr else None
+    
 # get most common item build for a champ by role
 def most_common_items_specific(champion, role):
     c = db_connect()
     c.execute('''SELECT item1, item2, item3, item4, item5, item6 FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
     items = c.fetchall()
+    db_close()
     counter = Counter(item for row in items for item in row)
     return [i[0] for i in counter.most_common(6)] + [None] * (6 - len(counter))
 
@@ -129,6 +132,7 @@ def most_common_spells_specific(champion, role):
     c.execute('''SELECT summoner1Id, summoner2Id FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
     spells = c.fetchall()
+    db_close()
     counter = Counter(spell for row in spells for spell in row)
     return [i[0] for i in counter.most_common(2)] + [None] * (2 - len(counter))
 
@@ -138,6 +142,7 @@ def most_common_runes_specific(champion, role):
     c.execute('''SELECT perks FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
     ret = c.fetchall()
+    db_close()
     counter = Counter(item for row in ret for item in row)
     return counter.most_common(1)[0][0] if counter else None
 
@@ -146,14 +151,83 @@ def champ_kda_specific(champion, role):
     c = db_connect()
     c.execute('''SELECT AVG(kills), AVG(deaths), AVG(assists) FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
-    return c.fetchone()
+    ret = c.fetchone()
+    db_close()
+    return ret
 
 #get average game duration for a champ by role
 def avg_game_duration_specific(champion, role):
     c = db_connect()
     c.execute('''SELECT AVG(timePlayed) FROM participants 
              WHERE championName=? AND individualPosition=?''', (champion, role))
-    return c.fetchone()[0]
+    ret = c.fetchone()[0]
+    db_close()
+    return ret
+
+#calculate cs for a champ by role
+def get_cs_specific(champion, role):
+    c = db_connect()
+    c.execute('''SELECT SUM(totalMinionsKilled) FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    minionsKilled = c.fetchone()[0]
+
+    c.execute('''SELECT SUM(timePlayed) FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    time = c.fetchone()[0]
+    db_close()
+    if minionsKilled == None or time == None: return None
+    return minionsKilled / time
+
+# get avg dmgtaken for a champ by role
+def avg_dmgtaken_specific(champion, role):
+    c = db_connect()
+    c.execute('''SELECT AVG(totalDamageTaken) FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    ret = c.fetchone()[0]
+    db_close()
+    return ret
+
+# get avg taken for a champ disregarding role
+def avg_dmgtaken(champion):
+    c = db_connect()
+    c.execute('''SELECT AVG(totalDamageTaken) FROM participants 
+             WHERE championName=?''', [champion])
+    ret = c.fetchone()[0]
+    db_close()
+    return ret
+
+# get avg dmgdealt for a champ by role
+def avg_dmgdealt_specific(champion, role):
+    c = db_connect()
+    c.execute('''SELECT AVG(totalDamageDealtToChampions) FROM participants 
+             WHERE championName=? AND individualPosition=?''', (champion, role))
+    ret = c.fetchone()[0]
+    db_close()
+    return ret
+
+# get avg dmgdealt for a champ disregarding role
+def avg_dmgdealt(champion):
+    c = db_connect()
+    c.execute('''SELECT AVG(totalDamageDealtToChampions) FROM participants 
+             WHERE championName=?''', [champion])
+    ret = c.fetchone()[0]
+    db_close()  
+    return ret
+
+
+#calculate cs for a champ disregarding role
+def get_cs(champion):
+    c = db_connect()
+    c.execute('''SELECT SUM(totalMinionsKilled) FROM participants 
+             WHERE championName=?''', [champion])
+    minionsKilled = c.fetchone()[0]
+
+    c.execute('''SELECT SUM(timePlayed) FROM participants 
+             WHERE championName=?''', [champion])
+    time = c.fetchone()[0]
+    db_close()
+    if minionsKilled == None or time == None: return None
+    return minionsKilled / time
 
 # get winrate for a champ regardless of role
 def champ_wr(champion):
@@ -161,6 +235,7 @@ def champ_wr(champion):
     c.execute('''SELECT AVG(win) FROM participants 
              WHERE championName=?''', [champion])
     wr = c.fetchone()[0]
+    db_close()
     return wr * 100 if wr else None
 
 
@@ -170,6 +245,7 @@ def most_common_items(champion):
     c.execute('''SELECT item1, item2, item3, item4, item5, item6 FROM participants 
              WHERE championName=?''', [champion])
     ret = c.fetchall()
+    db_close()
     counter = Counter(item for row in ret for item in row)
     return [i[0] for i in counter.most_common(6)] + [None] * (6 - len(counter))
 
@@ -180,6 +256,7 @@ def most_common_spells(champion):
     c.execute('''SELECT summoner1Id, summoner2Id FROM participants 
              WHERE championName=?''', [champion])
     ret = c.fetchall()
+    db_close()
     counter = Counter(item for row in ret for item in row)
     return [i[0] for i in counter.most_common(2)] + [None] * (2 - len(counter))
 
@@ -189,6 +266,7 @@ def most_common_runes(champion):
     c.execute('''SELECT perks FROM participants 
              WHERE championName=?''', [champion])
     ret = c.fetchall()
+    db_close()
     counter = Counter(item for row in ret for item in row)
     return counter.most_common(1)[0][0] if counter else None
 
@@ -197,14 +275,19 @@ def champ_kda(champion):
     c = db_connect()
     c.execute('''SELECT AVG(kills), AVG(deaths), AVG(assists) FROM participants 
              WHERE championName=?''', [champion])
-    return c.fetchone()
+    ret = c.fetchone()
+    db_close()
+    return ret
 
 # get average game duration for a champ regardless of role
 def avg_game_duration(champion):
     c = db_connect()
     c.execute('''SELECT AVG(timePlayed) FROM participants 
              WHERE championName=?''', [champion])
-    return c.fetchone()[0]
+    ret = c.fetchone()[0]
+    db_close()
+    return ret
+
 
 #insert general champion data into database
 def insert_champ_data():
@@ -216,9 +299,10 @@ def insert_champ_data():
         runes = most_common_runes(champ)
         kda = champ_kda(champ)
         game_duration = avg_game_duration(champ)
-        query = "INSERT INTO champions VALUES (" + '?,' * 15 + '?)'
+        cs, dmgtaken, dmgdealt = get_cs(champ), avg_dmgtaken(champ), avg_dmgdealt(champ)
         c = db_connect()
-        c.execute(query, (champ, 'ALL', winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, runes))
+        query = "INSERT INTO champions VALUES (" + '?,' * 18 + '?)'
+        c.execute(query, (champ, 'ALL', winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, cs, dmgtaken, dmgdealt, runes))
         db_close()
     
 
@@ -233,9 +317,11 @@ def insert_champ_data_by_roles():
             runes = most_common_runes_specific(champ, role)
             kda = champ_kda_specific(champ, role)
             game_duration = avg_game_duration_specific(champ, role)
+            cs, dmgtaken, dmgdealt = get_cs_specific(champ, role), avg_dmgtaken_specific(champ, role), avg_dmgdealt_specific(champ, role)
             c = db_connect()
-            query = "INSERT INTO champions VALUES (" + '?,' * 15 + '?)'
-            c.execute(query, (champ, role, winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, runes))
+            query = "INSERT INTO champions VALUES (" + '?,' * 18 + '?)'
+            c.execute(query, (champ, role, winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, cs, dmgtaken, dmgdealt, runes))
+            db.commit()
             db_close()
 # print(print_sqlite_table('participants'))
 
@@ -291,9 +377,23 @@ def get_match_participant_data(matchId):
         
     # final output {blueTop: {}, blueJungle: {}, blueBot: {} ...}
     return filtered_data
-            
-    
-    
+
+#get specific champion data for specific role
+def get_champ_data_by_role(champion, role):
+    c = db_connect()
+    c.execute('SELECT * FROM champions WHERE championName = ? AND role=?;', [champion, role])
+    data = c.fetchone()
+    db_close()
+    return data
+
+# get generic champion data for specific champion
+def get_champ_data(champion):
+    c = db_connect()
+    c.execute('SELECT * FROM champions WHERE championName = ? AND role="ALL";', [champion])
+    data = c.fetchone()
+    db_close()
+    return data
+
 # get match info for specifc match
 def get_match_data(matchId):
     c = db_connect()
@@ -336,14 +436,44 @@ def get_spell_images():
         return spell_data
     else:
         return None
+    
+def get_champion_text(champ_name):
+    if champ_name == 'FiddleSticks':
+        champ_name = 'Fiddlesticks'
+    # Make a request to the Data Dragon to get the summoner spell data
+    url = 'http://ddragon.leagueoflegends.com/cdn/13.9.1/data/en_US/champion.json'
+    response = requests.get(url)
 
-# def create_user(username, password):
-#     c = db_connect()
-#     c.execute('INSERT INTO users(username, password, Did_Questions) VALUES (?, ?, ?);', (username, password, False))
-#     c.execute('INSERT INTO grassmeter(Quiz_Grass, Grass, Game_Grass) VALUES (?, ?, ?);', (0, 0, 0))
-#     db.commit()
-#     #db_close() Dont know what exactly the problem is but dont uncomment this for signup to work
+    # Check if the request was successful
+    if response.status_code == 200:
+        data = response.json()
+        temp_data = data['data']
+        return (temp_data[champ_name]['title'], temp_data[champ_name]['blurb'])
+    else:
+        return None
+    
+def get_champion_image(champ_name, range):
+    rand = random.randint(1, range) 
+    if champ_name == 'Fiddlesticks':
+        champ_name = 'FiddleSticks'
+    url = f'https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/centered/{champ_name}_{rand}.jpg'
+    print(url)
+    response = requests.get(url)
 
+    # Check if the request was successful
+    if response.status_code == 200:
+        return url
+    else:
+        return get_champion_image(champ_name, range-1)
+
+# get all champ names. Use after db is created.
+def get_champ_names_fast():
+    c = db_connect()
+    c.execute('SELECT DISTINCT championName FROM champions;')
+    data = list(map(''.join, c.fetchall()))
+    db_close()
+    return data
+    
 # make_database()
 # insert_match_data()
 # insert_participant_data()
