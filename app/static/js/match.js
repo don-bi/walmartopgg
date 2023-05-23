@@ -55,9 +55,9 @@ items.forEach(item => {
     });
 });
 
-function createBarGraph(playerStat, avgStat, element, stat, champion) {
+function createBarGraph(playerStat, avgStat, element, stat, player, champion) {
     const data = {
-        labels: [`Player's ${stat}` , `Average ${champion} ${stat}`],
+        labels: [`${player}'s ${stat}` , `Average ${champion} ${stat}`],
         datasets: [{
             label: `${stat}`,
             data: [playerStat, avgStat],
@@ -77,15 +77,17 @@ function createBarGraph(playerStat, avgStat, element, stat, champion) {
         data: data,
         options: {
             responsive: true,
+            plugins: {
             legend: {
                 labels: {
                     color: "white"
                 }
+            }
             },
             scales: {
             y: {
                 ticks: {
-                    color: "#bebebe",
+                    color: "white",
                 },
                 grid: {
                     display: false
@@ -94,14 +96,14 @@ function createBarGraph(playerStat, avgStat, element, stat, champion) {
             },
             x: {
                 ticks: {
-                    color: "#bebebe",
+                    color: "white",
                 },
                 grid: {
                     display: false
                 },
             }
             }
-        },
+         }
     });
 }
 
@@ -112,7 +114,7 @@ positions[0].concat(positions[1]).forEach(pos => {
     const champKills = champStats['kills'];
     const champDeaths = champStats['deaths'];
     const champAssists = champStats['assists'];
-    createBarGraph(playerStats['kills'], champKills, document.querySelector(`.player-data.${pos} .kill.chart`), 'Kills', championName);
-    createBarGraph(playerStats['deaths'], champDeaths, document.querySelector(`.player-data.${pos} .death.chart`), 'Deaths', championName);
-    createBarGraph(playerStats['assists'], champAssists, document.querySelector(`.player-data.${pos} .assist.chart`), 'Assists', championName);
+    createBarGraph(playerStats['kills'], champKills, document.querySelector(`.player-data.${pos} .kill.chart`), 'Kills', playerStats['summonerName'], championName);
+    createBarGraph(playerStats['deaths'], champDeaths, document.querySelector(`.player-data.${pos} .death.chart`), 'Deaths', playerStats['summonerName'], championName);
+    createBarGraph(playerStats['assists'], champAssists, document.querySelector(`.player-data.${pos} .assist.chart`), 'Assists', playerStats['summonerName'], championName);
 });
