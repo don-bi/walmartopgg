@@ -28,6 +28,10 @@ def match(match_id):
     participant_data = db.get_match_participant_data(match_id)
     positions = [['blueTop', 'blueJungle', 'blueMiddle', 'blueBottom', 'blueSupport'], 
                  ['redTop', 'redJungle', 'redMiddle', 'redBottom', 'redSupport']]
+
+    champ_data = [[db.get_champ_data(participant_data[position]['championName']) for position in positions[0]]
+                 ,[db.get_champ_data(participant_data[position]['championName']) for position in positions[1]]]
+    print(champ_data)
     position_names = ['Top', 'Jungle', 'Middle', 'Bottom', 'Support']
     return render_template('match.html',str=str, match_id=match_id, match_data=match_data,
      participant_data=participant_data, positions=positions, position_names=position_names,
