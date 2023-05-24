@@ -515,14 +515,59 @@ def get_champ_names_fast():
 #gets average winrate for all champions and their game duration excluding the given champion
 def get_avg_winrate(champion_name):
     c = db_connect()
-    c.execute('SELECT championName, winRate, gameDuration FROM champions WHERE championName != ?;', [champion_name])
+    c.execute('SELECT winRate, kills, deaths, assists FROM champions WHERE championName != ?;', [champion_name])
     data = c.fetchall()
     db_close()
     final = []
     for row in data:
-        final.append({'x': row[1], 'y': row[2]/60})
+        kda = (row[1] + row[3])/row[2]
+        final.append({'x': kda, 'y': row[0]})
     return final
-    
+
+def get_rune_data(champion_data):
+    tmp = champion_data['runes'].replace("'", '"')
+    champ_rune_data = json.loads(tmp)
+    primary_tree = champ_rune_data['styles'][0]['selections']
+    primary_ids = [champ_rune_data['styles'][0]['style']]
+    for rune in primary_tree:
+        primary_ids.append(rune['perk'])
+    secondary_tree = champ_rune_data['styles'][1]['selections']
+    secondary_ids = [champ_rune_data['styles'][1]['style']]
+    for rune in secondary_tree:
+        secondary_ids.append(rune['perk'])
+
+    url = f"http://ddragon.leagueoflegends.com/cdn/13.9.1/data/en_US/runesReforged.json"
+    response = requests.get(url)
+    rune_data = response.json()
+
+    image_url = "http://ddragon.leagueoflegends.com/cdn/img/"
+
+    final = []
+    for i, tree in enumerate(rune_data):
+        if primary_ids[0] == tree['id']: #if primary tree is this
+            final.append([tree['key']])
+            final.append([image_url + tree['icon']])
+            for x, rune_row in enumerate(tree['slots']):
+                rune_cols = rune_row['runes']
+                for rune in rune_cols:
+                    if primary_ids[x+1] == rune['id']:
+                        final[0].append(rune['key'])
+                        final[1].append(image_url + rune['icon'])
+    secondary_count = 1
+    for i, tree in enumerate(rune_data):
+        if secondary_ids[0] == tree['id']: #if primary tree is this
+            final.append([tree['key']])
+            final.append([image_url + tree['icon']])
+            for x, rune_row in enumerate(tree['slots']):
+                rune_cols = rune_row['runes']
+                for rune in rune_cols:
+                    if secondary_count == 3: break
+                    if secondary_ids[secondary_count] == rune['id']:
+                        final[2].append(rune['key'])
+                        final[3].append(image_url + rune['icon'])
+                        secondary_count += 1                  
+
+    return final
     
 # make_database()
 # insert_match_data()

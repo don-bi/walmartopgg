@@ -9,7 +9,18 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="champ-splash" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0,0,0,0.6)), url({{champ_image}}); background-size: cover;"> 
+<body class="champ-splash" style="
+    background: fixed;
+    background-color: rgba(59, 58, 58, 0.792);
+    background-blend-mode: multiply;
+    background-image: url({{champ_image}});
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    margin-bottom: 10vh;">
   <form class="recall">
     <button formaction="/"></button>
   </form>
@@ -24,14 +35,41 @@
   </div>
 
   <div class="numbers">
-    <div class="box-wrapper">
-      <div class="box-title">Average Winrate</div>
-      <div class="number winrate">{{round(champ_data['winRate'] + 0.00,2)}}</div>
+    <div class="box-title">Most Common Runes</div>
+    <div class="rune-wrapper">
+      <div class="column">
+        <img src="{{rune_data[1][0]}}" alt="" class="tree">
+        <div class="rune-box">{{rune_data[0][0]}}</div>
+        <img src="{{rune_data[1][1]}}" alt="" class="rune">
+        <div class="rune-box">{{rune_data[0][1]}}</div>
+        <img src="{{rune_data[1][2]}}" alt="" class="rune">
+        <div class="rune-box">{{rune_data[0][2]}}</div>
+        <img src="{{rune_data[1][3]}}" alt="" class="rune">
+        <div class="rune-box">{{rune_data[0][3]}}</div>
+        <img src="{{rune_data[1][4]}}" alt="" class="rune">
+        <div class="rune-box">{{rune_data[0][4]}}</div>
+      </div>
+      <div class="column">
+        <img src="{{rune_data[3][0]}}" alt="" class="tree">
+        <div class="rune-box">{{rune_data[2][0]}}</div>
+        <img src="{{rune_data[3][1]}}" alt="" class="rune">
+        <div class="rune-box">{{rune_data[2][1]}}</div>
+        <img src="{{rune_data[3][2]}}" alt="" class="rune">
+        <div class="rune-box">{{rune_data[2][2]}}</div>
+      </div>
     </div>
-    <canvas class="winrate-graph"></canvas>
-    <div class="box-wrapper">
-      <div class="box-title">Average KDA</div>
-      <div class="number kda">{{round((champ_data['kills']+champ_data['assists'])/champ_data['deaths'] + 0.00,2)}}</div>
+    <div class="number-wrapper">
+      <div class="box-wrapper">
+        <div class="box-title">Average Winrate</div>
+        <div class="number winrate">{{round(champ_data['winRate'] + 0.00,2)}}</div>
+      </div>
+      <div class="box-wrapper">
+        <div class="box-title">Average KDA</div>
+        <div class="number kda">{{round((champ_data['kills']+champ_data['assists'])/champ_data['deaths'] + 0.00,2)}}</div>
+      </div>
+    </div>
+    <div class="winrate-graph-wrapper">
+      <canvas class="winrate-graph"></canvas>
     </div>
   </div>
 
@@ -66,6 +104,8 @@
     }
     const champ_data = convertVar({{champ_data | tojson}});
     const winrate_data = convertVar({{winrates | tojson}});
+    const champ_name = convertVar({{champ_name | tojson}});
+    const rune_data = convertVar({{rune_data | tojson}});
   </script>
   <script src={{url_for('static', filename='js/champ.js')}}></script>
   <!-- <script src={{url_for('static', filename='js/background.js')}}></script> -->

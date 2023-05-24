@@ -17,7 +17,8 @@ def champ(champ_name):
                            convert_item_id = db.convert_item_id,
                            spell_data = db.get_spell_images(),
                            str = str, round = round,
-                           winrates = db.get_avg_winrate(champ_name))
+                           winrates = db.get_avg_winrate(champ_name),
+                           rune_data = db.get_rune_data(db.get_champ_data(champ_name)))
 
 @app.route('/random', methods=['POST'])
 def random():
