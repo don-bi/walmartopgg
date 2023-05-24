@@ -24,7 +24,7 @@
             {% set blue_position = positions[0][blue_position_index] %}
             <div class="player {{blue_position}}">
                 <div class="icon">
-                    <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[blue_position]['championName']}}_0.jpg" alt="">
+                    <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[blue_position]['championName']}}_0.jpg" alt="" >
                     <div class="username">{{participant_data[blue_position]['summonerName']}}</div>
                 </div>
                 <div class="position-name">
@@ -109,7 +109,7 @@
                     {% else %}
                     <div class="champion-name">{{current_participant_data['championName']}}</div>
                     {% endif %}
-                    <img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[position]['championName']}}_0.jpg" alt="">
+                    <a href="../champ/{{current_participant_data['championName']}}"><img class="champion_icons" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{participant_data[position]['championName']}}_0.jpg" alt=""></a>
                     <div class="data username">{{current_participant_data['summonerName']}}</div>
                 </div>
                 <div class="kda-box">
