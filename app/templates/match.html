@@ -15,6 +15,11 @@
 
     <div class="top-section">
         <div class="blue side">
+            {% if match_data['WIN'] == 1 %}
+            <img src={{url_for('static', filename="victory.png")}} style="width:25%; display: block; margin-left: auto; margin-right: auto;">
+            {% else %}
+            <img src={{url_for('static', filename="defeat.png")}} style="width:25%; display: block; margin-left: auto; margin-right: auto;">
+            {% endif %}
             {% for blue_position_index in range(5) %}
             {% set blue_position = positions[0][blue_position_index] %}
             <div class="player {{blue_position}}">
@@ -72,6 +77,11 @@
             </div>
         </div>
         <div class="red side">
+            {% if match_data['WIN'] == 0 %}
+            <img src={{url_for('static', filename="victory.png")}} style="width:25%; display: block; margin-left: auto; margin-right: auto;">
+            {% else %}
+            <img src = {{url_for('static', filename="defeat.png")}} style="width:25%; display: block; margin-left: auto; margin-right: auto;">
+            {% endif %}
             {% for red_position_index in range(5) %}
             {% set red_position = positions[1][red_position_index] %}
             <div class="player {{red_position}}">
