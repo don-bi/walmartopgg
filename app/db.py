@@ -54,7 +54,7 @@ def make_database():
                totalTimeCCDealt INT,totalTimeSpentDead INT,totalUnitsHealed INT,tripleKills INT,trueDamageDealt INT,trueDamageDealtToChampions INT,trueDamageTaken INT,turretKills INT,turretTakedowns INT,
                turretsLost INT,unrealKills INT,visionClearedPings INT,visionScore INT,visionWardsBoughtInGame INT,wardsKilled INT,wardsPlaced INT,win INT)''')
 
-    c.execute('''CREATE TABLE IF NOT EXISTS champions(championName TEXT, role TEXT, winRate INT, kills INT, deaths INT, assists INT, commonSpell1 INT, commonSpell2 INT,
+    c.execute('''CREATE TABLE IF NOT EXISTS champions(championName TEXT, role TEXT, winRate INT, kills INT, deaths INT, assists INT, commonSpell1 INT, commonSpell2 INT, item0 INT,
     item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT, gameDuration INT, cs INT, dmgTaken INT, dmgDealt INT, runes BLOB)''')
     db.commit()
     c.close()
@@ -223,16 +223,17 @@ def avg_dmgdealt(champion):
 #calculate cs for a champ disregarding role
 def get_cs(champion):
     c = db_connect()
-    c.execute('''SELECT SUM(totalMinionsKilled) FROM participants 
+    c.execute('''SELECT AVG(totalMinionsKilled) FROM participants 
              WHERE championName=?''', [champion])
     minionsKilled = c.fetchone()[0]
 
-    c.execute('''SELECT SUM(timePlayed) FROM participants 
+    c.execute('''SELECT AVG(neutralMinionsKilled) FROM participants 
              WHERE championName=?''', [champion])
-    time = c.fetchone()[0]
+    monstersKilled = c.fetchone()[0]
     db_close()
-    if minionsKilled == None or time == None: return None
-    return minionsKilled / time
+    CS = minionsKilled + monstersKilled
+    if CS == None: return None
+    return CS
 
 # get winrate for a champ regardless of role
 def champ_wr(champion):
@@ -247,12 +248,18 @@ def champ_wr(champion):
 # get most common item build for a champ regardless of role
 def most_common_items(champion):
     c = db_connect()
-    c.execute('''SELECT item1, item2, item3, item4, item5, item6 FROM participants 
+    c.execute('''SELECT item0, item1, item2, item3, item4, item5 FROM participants 
              WHERE championName=?''', [champion])
     ret = c.fetchall()
+    
+    c.execute('''SELECT item6 FROM participants 
+             WHERE championName=?''', [champion])
+    ret2 = c.fetchall()
+    
     db_close()
     counter = Counter(item for row in ret for item in row)
-    return [i[0] for i in counter.most_common(6)] + [None] * (6 - len(counter))
+    counter2 = Counter(item for row in ret2 for item in row)
+    return [i[0] for i in counter.most_common(6)] + [None] * (6 - len(counter)) + [i[0] for i in counter2.most_common(1)]
 
 
 # get most common summoner spells for a champ regardless of role
@@ -308,8 +315,8 @@ def insert_champ_data():
         game_duration = avg_game_duration(champ)
         cs, dmgtaken, dmgdealt = get_cs(champ), avg_dmgtaken(champ), avg_dmgdealt(champ)
         c = db_connect()
-        query = "INSERT INTO champions VALUES (" + '?,' * 18 + '?)'
-        c.execute(query, (champ, 'ALL', winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], game_duration, cs, dmgtaken, dmgdealt, runes))
+        query = "INSERT INTO champions VALUES (" + '?,' * 19 + '?)'
+        c.execute(query, (champ, 'ALL', winrate, kda[0], kda[1], kda[2], spells[0], spells[1], items[0], items[1], items[2], items[3], items[4], items[5], items[6], game_duration, cs, dmgtaken, dmgdealt, runes))
         db_close()
     print("finished inserting champ data...")
     
@@ -412,17 +419,25 @@ def get_champ_data_by_role(champion, role):
 # get generic champion data for specific champion
 def get_champ_data(champion):
     c = db_connect()
+    db = sqlite3.connect(DB_FILE)
+    db.row_factory = sqlite3.Row
+    c = db.cursor()
     c.execute('SELECT * FROM champions WHERE championName = ? AND role="ALL";', [champion])
-    data = c.fetchone()
+    data = c.fetchall()
     db_close()
+    data = list(map(lambda item:dict(item),data))[0]
     return data
 
 # get match info for specifc match
 def get_match_data(matchId):
     c = db_connect()
+    db = sqlite3.connect(DB_FILE)
+    db.row_factory = sqlite3.Row
+    c = db.cursor()
     c.execute('SELECT * FROM matches WHERE matchId = ?;', [matchId])
-    data = c.fetchall()[0]
+    data = c.fetchall()
     db_close()
+    data = list(map(lambda item:dict(item),data))[0]
     return data
 
 def convert_item_id(item_id):
@@ -496,6 +511,18 @@ def get_champ_names_fast():
     data = list(map(''.join, c.fetchall()))
     db_close()
     return data
+
+#gets average winrate for all champions and their game duration excluding the given champion
+def get_avg_winrate(champion_name):
+    c = db_connect()
+    c.execute('SELECT championName, winRate, gameDuration FROM champions WHERE championName != ?;', [champion_name])
+    data = c.fetchall()
+    db_close()
+    final = []
+    for row in data:
+        final.append({'x': row[1], 'y': row[2]/60})
+    return final
+    
     
 # make_database()
 # insert_match_data()

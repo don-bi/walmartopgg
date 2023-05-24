@@ -6,25 +6,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{champ_name}} INFO</title>
   <link rel="stylesheet" href={{url_for('static', filename='css/style.css')}}>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="align-items-center" style="background-image: url({{champ_image}}); background-repeat: no-repeat; background-size: cover;"> 
-  <form class="recall" style="margin-top: 2%; margin-left: 2%; width: 100%; position: relative;">
-    <button formaction="/" style="cursor: pointer;">
-      <img src="https://static.wikia.nocookie.net/leagueoflegends/images/4/43/Recall.png/" alt="recall">
-    </button>
+<body class="champ-splash" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0,0,0,0.6)), url({{champ_image}}); background-size: cover;"> 
+  <form class="recall">
+    <button formaction="/"></button>
   </form>
 
-  <div class="info" style="position: relative; margin-top: 2%; background-color: white; overflow: auto; opacity: 0.75;">
-    <img class="" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{champ_name}}_0.jpg" style=" border: 2px solid rgb(188, 188, 188); border-radius: 100%; float: left; margin-left: 2%; width: 200px; height: auto; max-width: 100%; margin-top: 0.5%;">
+  <div class="info">
+    <img class="info-icon" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{champ_name}}_0.jpg">
     {% if champ_name == 'MonkeyKing' %}
-    <div class="full-name" style="text-align: center; float: left; margin-left: 1%;">Wukong, {{champ_text[0]}}</div>
+    <div class="full-name">Wukong, {{champ_text[0]}}</div>
     {% else %}
-    <div class="full-name" style="text-align: center; float: left; margin-left: 1%; margin-top: 1%; font-size: 24px;"><b>{{champ_name}}</b>, {{champ_text[0]}}</div>
+    <div class="full-name"><b>{{champ_name}}</b>, {{champ_text[0]}}</div>
     {% endif %}
   </div>
+
+  <div class="numbers">
+    <div class="box-wrapper">
+      <div class="box-title">Average Winrate</div>
+      <div class="number winrate">{{round(champ_data['winRate'] + 0.00,2)}}</div>
+    </div>
+    <canvas class="winrate-graph"></canvas>
+    <div class="box-wrapper">
+      <div class="box-title">Average KDA</div>
+      <div class="number kda">{{round((champ_data['kills']+champ_data['assists'])/champ_data['deaths'] + 0.00,2)}}</div>
+    </div>
+  </div>
+
+  <div class="usage-box">
+    <div class="box-wrapper">
+      <div class="box-title">Most Summoner Spells</div>
+      <div class="spell-box">
+          <img src="http://ddragon.leagueoflegends.com/cdn/13.9.1/img/spell/{{spell_data[str(champ_data['commonSpell1'])]}}" alt="">
+          <img src="http://ddragon.leagueoflegends.com/cdn/13.9.1/img/spell/{{spell_data[str(champ_data['commonSpell2'])]}}" alt="">
+      </div>
+    </div>
+
+    <div class="box-wrapper">
+      <div class="box-title">Most Common Items Built</div>
+      <div class="item-box">
+          {% for item_index in range(7) %}
+          {% set item = 'item' + item_index|string %}
+          {% if champ_data[item] != 0 %}
+          <div class="item">
+              <img src="{{convert_item_id(champ_data[item])[1]}}" alt="">
+              <div class="item-name">{{convert_item_id(champ_data[item])[0]}}</div>
+          </div>
+          {% endif %}
+          {% endfor %}
+      </div>
+    </div>
+</div>
   
-  
+  <script>
+    function convertVar(e) {
+      return e;
+    }
+    const champ_data = convertVar({{champ_data | tojson}});
+    const winrate_data = convertVar({{winrates | tojson}});
+  </script>
   <script src={{url_for('static', filename='js/champ.js')}}></script>
   <!-- <script src={{url_for('static', filename='js/background.js')}}></script> -->
 </body>

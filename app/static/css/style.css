@@ -10,21 +10,31 @@ body {
     height: 100vh;
     background-color: gray;
     margin: 0;
+    overflow-x: hidden;
 }
 
 .recall {
     position: absolute;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
 }
 
 .recall button {
     border: none;
     background: none;
+    background-image: url("https://static.wikia.nocookie.net/leagueoflegends/images/4/43/Recall.png/");
+    background-size: cover;
+    border-radius: 100%;
+    width: 4vw;
+    height: 4vw;
+    transition: .2s;
 }
 
-.recall button img {
-    border-radius: 100%;
-    width: 5vw;
+.recall button:hover {
+    transform: scale(0.9);
 }
 
 .champ-names {
@@ -36,6 +46,10 @@ body {
     overflow: auto;
     margin-top: 10px;
     box-shadow: 1px 1px 8px -2px;
+}
+
+.search-icon {
+    height: 5vh;
 }
 
 .champ-name {
@@ -116,6 +130,89 @@ background: #50cbf4;
     box-shadow: 1px 1px 8px -2px;
 }
 
+.baron {
+    position: absolute;
+    top: 30%;
+    left: 43.5%;
+}
+
+.dragon {
+    position: absolute;
+    top: 61%;
+    right: 41%;
+}
+
+.top-minions {
+    position: absolute;
+    top: 21%;
+    left: 37%;
+}
+
+.mid-minions {
+    position: absolute;
+    top: 46%;
+    left: 49%;
+}
+
+.bot-minions {
+    position: absolute;
+    top: 72%;
+    right: 33%;
+}
+
+.dragon,
+.bot-minions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.baron-icon,
+.dragon-icon,
+.minion-icon {
+    width: 3vw;
+    height: 3vw;
+    border-radius: 100%;
+    transition: 0.2s;
+}
+
+.baron-icon:hover,
+.dragon-icon:hover,
+.minion-icon:hover {
+    transform: scale(1.1);
+}
+
+.baron-icon {
+    box-shadow: 1px 1px 8px -2px rgb(253, 40, 242);
+}
+
+.dragon-icon {
+    box-shadow: 1px 1px 8px -2px rgb(238, 63, 63);
+}
+
+.baron-kills,
+.dragon-kills,
+.top-minion-kills,
+.mid-minion-kills,
+.bot-minion-kills {
+    display: none;
+}
+
+.kill-container {
+    background-color: rgb(49, 49, 49);
+    padding: 2px 3px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 8px -2px;
+}
+
+.blue {
+    color: rgb(153, 241, 241);
+}
+
+.red {
+    color: rgb(247, 112, 89);
+}
+
 .top-section {
     display: flex;
     justify-content: space-between;
@@ -124,7 +221,6 @@ background: #50cbf4;
     background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0,0,0,0.8)),
     url("https://images.contentstack.io/v3/assets/blt370612131b6e0756/bltd897c9a5cef63006/5f9367dacb9eba781f0846fc/LoL_WR_KV_Banner_1920x1080.jpg");
     background-size: cover;
-    box-shadow: 0 2px 8px -2px;
 }
 
 .side {
@@ -172,7 +268,8 @@ background: #50cbf4;
     color: rgb(247, 112, 89);
 }
 
-.champion_icons {
+.champion_icons,
+.info-icon {
     width: 6vw;
     border: 2px solid rgb(188, 188, 188);
     border-radius: 100%;
@@ -236,7 +333,11 @@ background: #50cbf4;
 
 /* player-data stuff */
 .player-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding: 4vh 2vw;
+    background-color: rgb(42, 42, 42);
 }
 
 .player-top {
@@ -307,13 +408,31 @@ background: #50cbf4;
     position: absolute;
     display: none;
     background-color: #ffffff;
-    border: 1px solid #ccc;
-    padding: 10px;
+    padding: 5px 8px;
+    border-radius: 10px;
+
 }
 
-.kda-chart-box {
+.chart-box {
+    margin-top: 4vh;
+}
+
+.kda.chart-box {
     display: flex;
     justify-content: space-between;
+}
+
+.cs.chart-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+}
+
+.damage.chart-box {
+    display: flex;
+    justify-content: center;
+    gap: 2vw;
 }
 
 .chart-wrapper {
@@ -321,11 +440,55 @@ background: #50cbf4;
     height: auto;
 }
 
+.minion,
+.sword {
+    width: 15vw;
+}
 
 /* champ page time */
 .champ-splash {
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0,0,0,0.5));
-    object-fit: cover;
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.info {
+    padding: 15vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5vw;
+}
+
+.full-name {
+    color: white;
+    font-size: 3vw;
+    text-shadow: 1px 1px 2px white;
+}
+
+.box-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vh;
+}
+
+.box-wrapper .item img,
+.box-wrapper .spell-box img {
+    box-shadow: 1px 1px 10px -4px white;
+}
+
+.info-icon {
+    width: 20vw;
+    box-shadow: 1px 1px 10px -4px white;
+    border: none;
+}
+
+.box-title,
+.number {
+    color: white;
+    font-size: 2vw;
+    text-shadow: 1px 1px 2px white;
 }

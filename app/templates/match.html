@@ -10,9 +10,7 @@
 </head>
 <body>
     <form class="recall">
-        <button formaction="/">
-            <img src="https://static.wikia.nocookie.net/leagueoflegends/images/4/43/Recall.png/" alt="recall">
-        </button>
+        <button formaction="/"></button>
     </form>
 
     <div class="top-section">
@@ -32,6 +30,46 @@
         </div>
         <div class="no-side">
             <img class="summoners-rift-map" src="https://map.riftkit.net/img/rift/normal.jpg" alt="summoner's rift">
+            <div class="baron">
+                <img src="https://cdn.skins.co/o7Ao1bY2nTeWQKEMAEKhL91mduWEOj6TAQ1lS4jjizE/rs:fit:260:260:0/g:no/aHR0cHM6Ly9za2lucy5jby9zdG9yYWdlL2ltYWdlcy80ZDU5YTYyYTY5OGQ0MDc4OTI1ZTUxY2MzMWRiYmY4MC5wbmc.webp" alt="" class="baron-icon">
+                <div class="baron-kills kill-container">
+                    <span class="blue">Blue team killed {{match_data['BLUE_BARON_KILLS']}} barons</span>
+                    <br>
+                    <span class="red">Red team killed {{match_data['RED_BARON_KILLS']}} barons</span>
+                </div>
+            </div>
+            <div class="dragon">
+                <img src="https://cdn.skins.co/rhAEDzSZ9bQvrGd4nWmP1oMqk8u2TXrdTTzAL0X8it8/rs:fit:260:260:0/g:no/aHR0cHM6Ly9za2lucy5jby9zdG9yYWdlL2ltYWdlcy9mYTEwYzQyODRmNjA0NzdmODNjNmYzYTI1MTZkNTEwZS5wbmc.webp" alt="" class="dragon-icon">
+                <div class="dragon-kills kill-container">
+                    <span class="blue">Blue team killed {{match_data['BLUE_DRAGON_KILLS']}} dragons</span>
+                    <br>
+                    <span class="red">Red team killed {{match_data['RED_DRAGON_KILLS']}} dragons</span>
+                </div>
+            </div>
+            <div class="top-minions">
+                <img src="https://is5-ssl.mzstatic.com/image/thumb/Purple127/v4/25/5e/35/255e3536-f0b4-8ae1-b194-1cf500fc1673/source/512x512bb.jpg" alt="" class="top minion-icon">
+                <div class="top-minion-kills kill-container">
+                    <span class="blue">Blue team top laner killed {{participant_data['blueTop']['totalMinionsKilled']}} minions</span>
+                    <br>
+                    <span class="red">Red team top laner killed {{participant_data['redTop']['totalMinionsKilled']}} minion</span>
+                </div>
+            </div>
+            <div class="mid-minions">
+                <img src="https://is5-ssl.mzstatic.com/image/thumb/Purple127/v4/25/5e/35/255e3536-f0b4-8ae1-b194-1cf500fc1673/source/512x512bb.jpg" alt="" class="mid minion-icon">
+                <div class="mid-minion-kills kill-container">
+                    <span class="blue">Blue team mid laner killed {{participant_data['blueMiddle']['totalMinionsKilled']}} minions</span>
+                    <br>
+                    <span class="red">Red team mid laner killed {{participant_data['redMiddle']['totalMinionsKilled']}} minion</span>
+                </div>
+            </div>
+            <div class="bot-minions">
+                <img src="https://is5-ssl.mzstatic.com/image/thumb/Purple127/v4/25/5e/35/255e3536-f0b4-8ae1-b194-1cf500fc1673/source/512x512bb.jpg" alt="" class="bot minion-icon">
+                <div class="bot-minion-kills kill-container">
+                    <span class="blue">Blue team bot lane killed {{participant_data['blueBottom']['totalMinionsKilled'] + participant_data['blueSupport']['totalMinionsKilled']}} minions</span>
+                    <br>
+                    <span class="red">Blue team bot lane killed {{participant_data['redBottom']['totalMinionsKilled'] + participant_data['redSupport']['totalMinionsKilled']}} minions</span>
+                </div>
+            </div>
         </div>
         <div class="red side">
             {% for red_position_index in range(5) %}
@@ -95,7 +133,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="kda-chart-box">
+            <div class="kda chart-box">
                 <div class="chart-wrapper">
                     <canvas class="kill chart"></canvas>
                 </div>
@@ -104,6 +142,27 @@
                 </div>
                 <div class="chart-wrapper">
                     <canvas class="assist chart"></canvas>
+                </div>
+            </div>
+            <div class="cs chart-box">
+                {% if i == 0 %}
+                <img class="minion" src="https://static.wikia.nocookie.net/leagueoflegends/images/e/eb/Chaos_Minion_Caster_Render.png" alt="">
+                {% else %}
+                <img class="minion" src="https://lolfanatics.com/wp-content/uploads/2021/12/Melee-Minions.png" alt="">
+                {% endif %}
+                <img class="sword" src="https://static.thenounproject.com/png/2360258-200.png" alt="">
+                <div class="chart-wrapper">
+                    <canvas class="cs chart"></canvas>
+                </div>
+            </div>
+            <div class="damage chart-box">
+                <img class="damage-icon" src="https://www.mobafire.com/images/shards/axe.png" alt="">
+                <div class="chart-wrapper">
+                    <canvas class="damage-dealt chart"></canvas>
+                </div>
+                <img src="https://www.mobafire.com/images/shards/shield.png" alt="" class="tank-icon">
+                <div class="chart-wrapper">
+                    <canvas class="damage-taken chart"></canvas>
                 </div>
             </div>
         </div>
@@ -116,7 +175,7 @@
         }
         const positions = convertVar({{positions|tojson}});
         const participant_data = convertVar({{participant_data|tojson}});
-        const champ_data = convertVar({{champ_data|safe}});
+        const champ_data = convertVar({{champ_data|tojson}});
         console.log(champ_data)
     </script>
     <script src={{url_for('static', filename='js/match.js')}}></script>

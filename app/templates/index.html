@@ -16,9 +16,15 @@
     <form class="champ-names">
       {% for name in champ_names %}
       {% if name == 'MonkeyKing' %}
-        <button formaction="/champ/{{name}}" class="champ-name Wukong">Wukong</button>
+        <button formaction="/champ/{{name}}" class="champ-name Wukong">
+            <img class="search-icon" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{name}}_0.jpg" alt="">
+            Wukong
+        </button>
       {% else %}
-        <button formaction="/champ/{{name}}" class="champ-name {{name}}">{{name}}</button>
+        <button formaction="/champ/{{name}}" class="champ-name {{name}}">
+            <img class="search-icon" src="https://raw.githubusercontent.com/InFinity54/LoL_DDragon/master/img/champion/tiles/{{name}}_0.jpg" alt="">
+            {{name}}
+        </button>
       {% endif %}
       {% endfor %}
     </form>

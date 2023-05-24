@@ -1,3 +1,27 @@
+const baronIcon = document.querySelector('.baron-icon');
+const dragonIcon = document.querySelector('.dragon-icon');
+const topMinionIcon = document.querySelector('.top.minion-icon');
+const midMinionIcon = document.querySelector('.mid.minion-icon');
+const botMinionIcon = document.querySelector('.bot.minion-icon');
+const icons = [baronIcon, dragonIcon, topMinionIcon, midMinionIcon, botMinionIcon];
+
+const baronKills = document.querySelector('.baron-kills');
+const dragonKills = document.querySelector('.dragon-kills');
+const topMinionKills = document.querySelector('.top-minion-kills');
+const midMinionKills = document.querySelector('.mid-minion-kills');
+console.log(midMinionKills);
+const botMinionKills = document.querySelector('.bot-minion-kills');
+const kills = [baronKills, dragonKills, topMinionKills, midMinionKills, botMinionKills];
+icons.forEach((icon,index) => {
+    icon.addEventListener('mouseover', () => {
+        kills[index].style.display = 'block';
+    });
+    icon.addEventListener('mouseout', () => {
+        kills[index].style.display = 'none';
+    });
+});
+
+
 const playerDatas = document.querySelectorAll('.player-data');
 playerDatas.forEach(data => {
     data.style.display = 'none';
@@ -114,7 +138,14 @@ positions[0].concat(positions[1]).forEach(pos => {
     const champKills = champStats['kills'];
     const champDeaths = champStats['deaths'];
     const champAssists = champStats['assists'];
+    const champCS = champStats['cs'];
+    const champDamageDealt = champStats['dmgDealt'];
+    const champDamageTaken = champStats['dmgTaken'];
+    console.log(champDamageDealt, playerStats['totalDamageDealtToChampions']);
     createBarGraph(playerStats['kills'], champKills, document.querySelector(`.player-data.${pos} .kill.chart`), 'Kills', playerStats['summonerName'], championName);
     createBarGraph(playerStats['deaths'], champDeaths, document.querySelector(`.player-data.${pos} .death.chart`), 'Deaths', playerStats['summonerName'], championName);
     createBarGraph(playerStats['assists'], champAssists, document.querySelector(`.player-data.${pos} .assist.chart`), 'Assists', playerStats['summonerName'], championName);
+    createBarGraph(playerStats['totalMinionsKilled'] + playerStats['neutralMinionsKilled'], champCS, document.querySelector(`.player-data.${pos} .cs.chart`), 'CS', playerStats['summonerName'], championName);
+    createBarGraph(playerStats['totalDamageDealtToChampions'], champDamageDealt, document.querySelector(`.player-data.${pos} .damage-dealt.chart`), 'Damage Dealt', playerStats['summonerName'], championName);
+    createBarGraph(playerStats['totalDamageTaken'], champDamageTaken, document.querySelector(`.player-data.${pos} .damage-taken.chart`), 'Damage Taken', playerStats['summonerName'], championName);
 });
