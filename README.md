@@ -22,8 +22,8 @@ Step 2: Run the Flask Server
 Step 3: Open the link to the local host
 
     http://127.0.0.1:5000
-or go to
-lol.ychan.tech
+or go to\
+https://lol.ychan.tech
 
 # Data:
 
