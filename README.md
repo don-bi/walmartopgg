@@ -30,3 +30,4 @@ https://lol.ychan.tech
 Desc: Our dataset contains 17,000+ matches of League of Legends games that contains information such as each team's kills, monster kills, turret kills, etc.
 
 Source: We used the RIOT api to gather this data through Python. Then we parsed the data into a json file.
+Final Source: https://www.kaggle.com/datasets/vokainodra/league-of-legends-high-elo-match-data-patch-139
