@@ -1,4 +1,4 @@
-# Walmart OP.GG by Gwoblins
+# Walmart OP.GG
 Donald Bi (Data+DB), Yat Long Chan (Flask App), David Deng (HTML + JS), Jacob Guo (CSS + Bootstrap)
 
 Desc: This site will have a landing page that shows different graphs of winner stats vs. loser stats so the user can analyze how to win. Then we'll have a button to show a random match, displaying the different participants and also the statistics of the match. There'll be ways to view each participant, and by clicking them, a detailed description of the participant's performance in that game will appear. We're also planning to add a bookmark feature for matches that the user wants to keep. There'll also be a way to search for champion stats based on the matches (first bloods, pentakills, etc...). All the data is gathered using the RIOT api to ensure recency in the dataset.
