@@ -22,11 +22,11 @@ Riot Api: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on
 
 Step 0: Clone our repository 
 
-    git clone git@github.com:don-bi/gwoblins.git
+    git clone git@github.com:don-bi/walmartopgg.git
 
 Step 1: Change directory into our repository
 
-    cd gwoblins
+    cd walmartopgg
 
 Step 2: Run the Flask Server
 
