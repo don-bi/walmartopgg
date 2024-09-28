@@ -1,3 +1,5 @@
+<img src="./public/Screenshot 2024-09-28 002937.png" alt="Home" width="400px">
+
 # Walmart OP.GG
 Donald Bi (Data+DB), Yat Long Chan (Flask App), David Deng (HTML + JS), Jacob Guo (CSS + Bootstrap)
 
